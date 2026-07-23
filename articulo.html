@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Artículo | PatronTech</title>
+<meta name="description" content="Artículo técnico de PatronTech sobre Azure, inteligencia artificial, arquitectura cloud, automatización, FinOps y seguridad.">
+<meta name="author" content="Irving Omar Patron Padron">
+<meta name="theme-color" content="#07101d">
+<link rel="canonical" href="https://patrontech.mx/articulo.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PatronTech">
+<meta property="og:title" content="Artículo | PatronTech">
+<meta property="og:description" content="Artículo técnico de PatronTech sobre Azure, inteligencia artificial, arquitectura cloud, automatización, FinOps y seguridad.">
+<meta property="og:url" content="https://patrontech.mx/articulo.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700;800&family=STIX+Two+Text:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="index.html" aria-label="PatronTech, inicio">
+      <span class="brand-mark">P<span>T</span></span>
+      <span class="brand-name">Patron<em>Tech</em></span>
+    </a>
+    <nav class="nav" aria-label="Navegación principal">
+      <a href="index.html">Inicio</a>
+      <a href="articulos.html">Artículos</a>
+      <a href="guias.html">Guías</a>
+      <a href="novedades.html">Novedades</a>
+      <a href="recursos.html">Recursos</a>
+      <a href="categorias.html">Categorías</a>
+      <a href="sobre-mi.html">Sobre mí</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Cambiar tema"><span data-theme-label>☾</span></button>
+      <a class="primary-btn" href="mailto:irvingomar19@hotmail.com">Contacto</a>
+      <button class="icon-btn mobile-toggle" type="button" data-mobile-toggle aria-label="Abrir menú">☰</button>
+    </div>
+  </div>
+</header>
+<nav class="mobile-menu" aria-label="Navegación móvil">
+  <a href="index.html">Inicio</a>
+  <a href="articulos.html">Artículos</a>
+  <a href="guias.html">Guías</a>
+  <a href="novedades.html">Novedades</a>
+  <a href="recursos.html">Recursos</a>
+  <a href="categorias.html">Categorías</a>
+  <a href="sobre-mi.html">Sobre mí</a>
+</nav>
+
+<main id="contenido">
+<section class="container article-hero">
+  <span class="badge" data-article-category>Azure</span>
+  <h1 data-article-title>Cómo diseñar una landing zone empresarial en Azure</h1>
+  <p data-article-summary>Una guía práctica para estructurar management groups, suscripciones, políticas, redes y controles de gobierno desde el inicio.</p>
+  <div class="meta" data-article-meta></div>
+</section>
+<section class="section" style="padding-top:10px"><div class="container article-layout">
+  <article class="article-body">
+    <p>Una landing zone es la base operativa y de gobierno sobre la que se desplegarán las cargas de trabajo. No debe tratarse como una colección de recursos aislados, sino como una plataforma con decisiones explícitas sobre identidad, conectividad, seguridad, costos y operación.</p>
+    <h2 id="objetivos">1. Comienza por los objetivos</h2>
+    <p>Antes de crear suscripciones o políticas, documenta qué tipos de cargas se alojarán, qué regulaciones aplican, qué regiones se utilizarán y quién será responsable de operar cada componente.</p>
+    <blockquote>La mejor landing zone no es la que tiene más controles, sino la que establece controles suficientes, comprensibles y sostenibles.</blockquote>
+    <h2 id="estructura">2. Diseña la estructura de gobierno</h2>
+    <p>Los management groups deben representar necesidades de gobierno, no únicamente el organigrama. Una estructura simple suele ser más sostenible que una jerarquía excesiva.</p>
+    <pre><code>Tenant Root
+├── Platform
+│   ├── Connectivity
+│   ├── Identity
+│   └── Management
+└── Landing Zones
+    ├── Corp
+    └── Online</code></pre>
+    <h2 id="red">3. Define conectividad y seguridad</h2>
+    <p>Decide desde el inicio si utilizarás hub-and-spoke, Virtual WAN, ExpressRoute, VPN, firewall centralizado y resolución DNS híbrida. Estas decisiones condicionan la mayoría de las migraciones posteriores.</p>
+    <h2 id="operacion">4. Incluye operación y FinOps</h2>
+    <p>Configura diagnósticos, monitoreo, respaldos, actualización, presupuestos, etiquetas y responsables antes de incorporar cargas productivas. La operación no debe agregarse al final.</p>
+    <h2 id="conclusion">Conclusión</h2>
+    <p>Una landing zone debe evolucionar junto con la organización. Empieza con una arquitectura clara, automatizable y suficientemente flexible para incorporar nuevos controles sin rehacer la plataforma.</p>
+  </article>
+  <aside class="toc"><strong>En esta publicación</strong><a href="#objetivos">Objetivos</a><a href="#estructura">Gobierno</a><a href="#red">Conectividad</a><a href="#operacion">Operación y FinOps</a><a href="#conclusion">Conclusión</a></aside>
+</div></section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html">
+          <span class="brand-mark">P<span>T</span></span>
+          <span class="brand-name">Patron<em>Tech</em></span>
+        </a>
+        <p style="color:var(--muted);max-width:420px">Noticias, guías y análisis sobre Azure, inteligencia artificial, arquitectura cloud, automatización, FinOps y seguridad.</p>
+      </div>
+      <div><h4>Contenido</h4><a href="articulos.html">Artículos</a><a href="guias.html">Guías</a><a href="novedades.html">Novedades</a><a href="recursos.html">Recursos</a></div>
+      <div><h4>Categorías</h4><a href="categorias.html">Azure</a><a href="categorias.html">Inteligencia Artificial</a><a href="categorias.html">FinOps</a><a href="categorias.html">Seguridad</a></div>
+      <div><h4>Autor</h4><a href="sobre-mi.html">Sobre mí</a><a href="https://www.linkedin.com/in/omarpatron/" target="_blank" rel="noopener">LinkedIn</a><a href="mailto:irvingomar19@hotmail.com">Correo</a></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 PatronTech. Irving Omar Patron Padron.</span><span>patrontech.mx</span></div>
+  </div>
+</footer>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+
+</body>
+</html>
