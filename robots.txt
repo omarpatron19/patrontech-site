@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
-Sitemap: https://patrontech.mx/sitemap.xml
+
+Sitemap: https://www.patrontechhub.com/sitemap.xml
