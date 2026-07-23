@@ -1,4 +1,4 @@
-# PatronTech Static v2
+# PatronTech Static v1
 
 Sitio web estático de PatronTech, sin Node.js, npm ni procesos de compilación.
 
@@ -29,7 +29,7 @@ También puedes publicar el contenido mediante GitHub Actions o el portal de Azu
 
 ## Datos de marca
 
-- Dominio: patrontech.mx
+- Dominio: www.patrontechhub.com
 - Autor: Irving Omar Patron Padron
 - Correo: irvingomar19@hotmail.com
 - LinkedIn: https://www.linkedin.com/in/omarpatron/
