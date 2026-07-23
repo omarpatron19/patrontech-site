@@ -1,4 +1,4 @@
-# PatronTech Static v1
+# PatronTech Static v2
 
 Sitio web estático de PatronTech, sin Node.js, npm ni procesos de compilación.
 
