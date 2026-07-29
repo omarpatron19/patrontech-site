@@ -1,0 +1,29 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { formatDate } from '../lib/content';
+
+interface Props {
+  title: string;
+  summary: string;
+  category: string;
+  label: string;
+  publishedAt: Date;
+  readMinutes: number;
+  url: string;
+  cover: ImageMetadata;
+  coverAlt: string;
+}
+const { title, summary, category, label, publishedAt, readMinutes, url, cover, coverAlt } = Astro.props;
+---
+<article class="card content-card" data-category={category} data-type={label} data-title={title.toLowerCase()}>
+  <a href={url} class="card-cover-link" aria-label={`Leer: ${title}`}>
+    <Image src={cover} alt={coverAlt} class="card-cover" loading="lazy" />
+  </a>
+  <div class="card-content">
+    <span class="badge">{category}</span>
+    <h3><a href={url}>{title}</a></h3>
+    <p>{summary}</p>
+    <div class="meta"><span>{label}</span><span>{formatDate(publishedAt)}</span><span>{readMinutes} min</span></div>
+  </div>
+</article>

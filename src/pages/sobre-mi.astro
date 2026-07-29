@@ -1,0 +1,26 @@
+---
+import { Image, getImage } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import authorImage from '../assets/brand/irving-omar-patron-padron.jpg';
+import { absoluteUrl } from '../lib/seo';
+const authorSocialImage = await getImage({ src: authorImage, width: 600, format: 'webp' });
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  mainEntity: {
+    '@type': 'Person',
+    '@id': 'https://www.patrontechhub.com/#person',
+    name: 'Irving Omar Patron Padron',
+    jobTitle: 'Arquitecto cloud y consultor tecnológico',
+    image: absoluteUrl(authorSocialImage.src),
+    sameAs: ['https://www.linkedin.com/in/omarpatron/']
+  }
+};
+---
+<BaseLayout title="Irving Omar Patron Padron | Sobre PatronTech" description="Conoce la experiencia de Irving Omar Patron Padron, arquitecto cloud, consultor tecnológico y creador de PatronTech." canonicalPath="/sobre-mi/" structuredData={structuredData}>
+  <section class="page-hero"><div class="container"><span class="eyebrow">Autor de PatronTech</span><h1>Irving Omar Patron Padron</h1><p>Arquitecto cloud, consultor tecnológico y creador de contenido especializado en el ecosistema Microsoft.</p></div></section>
+  <section class="section"><div class="container author-block">
+    <div class="author-photo"><Image src={authorImage} alt="Irving Omar Patron Padron" loading="eager" /></div>
+    <div class="author-copy"><h2>Experiencia práctica, claridad técnica y aprendizaje continuo</h2><p>Irving Omar Patron Padron es arquitecto cloud y consultor tecnológico con amplia experiencia en Microsoft Azure, arquitectura empresarial, migraciones, seguridad, gobierno, automatización y optimización de costos.</p><p>A lo largo de su trayectoria ha participado en iniciativas de transformación cloud para organizaciones de gran escala, diseñando arquitecturas, landing zones, estrategias de migración, modelos de gobierno, soluciones de continuidad y prácticas FinOps.</p><p>Cuenta con múltiples certificaciones de Microsoft y experiencia impartiendo cursos, talleres y sesiones técnicas sobre Azure, infraestructura como código, seguridad, arquitectura cloud y tecnologías emergentes.</p><p>A través de PatronTech comparte noticias, guías, análisis y recursos prácticos para ayudar a profesionales y organizaciones a tomar mejores decisiones técnicas.</p><div class="hero-actions"><a class="primary-btn" href="https://www.linkedin.com/in/omarpatron/" rel="noopener noreferrer" target="_blank">Ver LinkedIn</a><a class="secondary-btn" href="mailto:irvingomar19@hotmail.com">Contactar</a></div></div>
+  </div></section>
+</BaseLayout>

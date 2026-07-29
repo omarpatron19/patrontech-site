@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getPublishedArticles, contentUrl, contentLabel, readingMinutes } from '../../lib/content';
+import { categories } from '../../data/categories';
+import { buildCollectionPageJsonLd } from '../../lib/seo';
+const entries = await getPublishedArticles();
+const structuredData = buildCollectionPageJsonLd('Artículos de Azure, IA y Cloud | PatronTech', 'Análisis, experiencias, comparativas y explicaciones técnicas sobre tecnologías Microsoft y arquitectura cloud.', '/articulos/');
+---
+<BaseLayout title="Artículos de Azure, IA y Cloud | PatronTech" description="Análisis, experiencias, comparativas y explicaciones técnicas sobre tecnologías Microsoft y arquitectura cloud." canonicalPath="/articulos/" structuredData={structuredData}>
+  <section class="page-hero"><div class="container"><span class="eyebrow">Biblioteca editorial</span><h1>Artículos</h1><p>Análisis, experiencias, comparativas y explicaciones técnicas sobre tecnologías Microsoft y arquitectura cloud.</p></div></section>
+  <section class="section" data-filter-shell><div class="container">
+    <div class="toolbar"><div class="filter-row"><button class="filter-btn active" data-filter="Todos">Todos</button>{categories.map((category) => <button class="filter-btn" data-filter={category.name}>{category.name}</button>)}</div><input class="search-input" data-search type="search" placeholder="Buscar artículos" aria-label="Buscar artículos" /></div>
+    <div class="listing" data-filterable>{entries.map((entry) => <PostCard title={entry.data.title} summary={entry.data.summary} category={entry.data.category} label={contentLabel(entry)} publishedAt={entry.data.publishedAt} readMinutes={readingMinutes(entry.body)} url={contentUrl(entry)} cover={entry.data.cover} coverAlt={entry.data.coverAlt} />)}</div>
+    <div class="empty-state" data-empty hidden>No encontramos artículos con esos criterios.</div>
+  </div></section>
+  <script src="/scripts/filters.js" defer></script>
+</BaseLayout>

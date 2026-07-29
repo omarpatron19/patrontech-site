@@ -1,0 +1,148 @@
+---
+import { Image, getImage } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import NewsCard from '../components/NewsCard.astro';
+import CategoryCard from '../components/CategoryCard.astro';
+import Newsletter from '../components/Newsletter.astro';
+import { categories } from '../data/categories';
+import { resources } from '../data/resources';
+import { getPublishedArticles, getPublishedGuides, getPublishedNews, contentUrl, contentLabel, readingMinutes, formatDate } from '../lib/content';
+import authorImage from '../assets/brand/irving-omar-patron-padron.jpg';
+import { absoluteUrl } from '../lib/seo';
+
+const [articles, guides, news] = await Promise.all([
+  getPublishedArticles(),
+  getPublishedGuides(),
+  getPublishedNews()
+]);
+const editorial = [...articles, ...guides].sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+const featured = editorial.find((entry) => entry.data.featured) ?? editorial[0];
+const recentGuides = guides.slice(0, 3);
+const authorSocialImage = await getImage({ src: authorImage, width: 600, format: 'webp' });
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': 'https://www.patrontechhub.com/#website',
+      url: 'https://www.patrontechhub.com/',
+      name: 'PatronTech',
+      description: 'Noticias, guías y análisis prácticos sobre Azure, inteligencia artificial, arquitectura cloud, automatización, FinOps, seguridad y certificaciones.',
+      inLanguage: 'es-MX',
+      publisher: { '@id': 'https://www.patrontechhub.com/#person' }
+    },
+    {
+      '@type': 'Person',
+      '@id': 'https://www.patrontechhub.com/#person',
+      name: 'Irving Omar Patron Padron',
+      url: 'https://www.patrontechhub.com/sobre-mi/',
+      image: absoluteUrl(authorSocialImage.src),
+      jobTitle: 'Arquitecto cloud y consultor tecnológico',
+      sameAs: ['https://www.linkedin.com/in/omarpatron/'],
+      knowsAbout: ['Microsoft Azure', 'Arquitectura cloud', 'FinOps', 'Seguridad cloud', 'Terraform', 'Inteligencia artificial']
+    }
+  ]
+};
+---
+<BaseLayout
+  title="PatronTech | Azure, IA, Arquitectura Cloud y FinOps"
+  description="Noticias, guías y análisis prácticos sobre Azure, inteligencia artificial, arquitectura cloud, automatización, FinOps, seguridad y certificaciones."
+  canonicalPath="/"
+  structuredData={structuredData}
+>
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="eyebrow">Cloud · IA · Arquitectura · FinOps</span>
+        <h1>Ideas técnicas.<br /><span>Decisiones con impacto.</span></h1>
+        <p>Noticias, guías y análisis basados en experiencia práctica con Microsoft Azure, inteligencia artificial, automatización, seguridad y arquitectura cloud.</p>
+        <div class="hero-actions"><a class="primary-btn" href="/articulos/">Explorar publicaciones</a><a class="secondary-btn" href="/novedades/">Ver novedades</a></div>
+      </div>
+      <div aria-label="Visual tecnológico de PatronTech" class="hero-panel">
+        <div class="grid-pattern"></div>
+        <div class="hero-terminal">
+          <div class="terminal-bar">www.patrontechhub.com / architecture</div>
+          <div class="terminal-code">
+            <div><span class="k">platform</span> = <span class="s">"Azure"</span></div>
+            <div><span class="k">principles</span> = [</div>
+            <div>&nbsp;&nbsp;<span class="v">"security"</span>,</div>
+            <div>&nbsp;&nbsp;<span class="v">"automation"</span>,</div>
+            <div>&nbsp;&nbsp;<span class="v">"finops"</span></div>
+            <div>]</div>
+            <div><span class="k">goal</span> = <span class="s">"community impact"</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {featured && (
+    <section class="section">
+      <div class="container">
+        <div class="section-head"><div><span class="eyebrow">Publicación destacada</span><h2>Contenido para construir mejor</h2></div><a class="text-link" href="/articulos/">Ver todos →</a></div>
+        <article class="feature-card has-image">
+          <div class="feature-image"><Image src={featured.data.cover} alt={featured.data.coverAlt} loading="eager" /></div>
+          <div class="feature-body">
+            <span class="badge">{featured.data.category}</span>
+            <h3>{featured.data.title}</h3>
+            <p>{featured.data.summary}</p>
+            <div class="meta"><span>{formatDate(featured.data.publishedAt)}</span><span>{readingMinutes(featured.body)} min</span><span>{featured.data.author}</span></div>
+            <div style="margin-top:24px"><a class="primary-btn" href={contentUrl(featured)}>Leer publicación</a></div>
+          </div>
+        </article>
+      </div>
+    </section>
+  )}
+
+  <section class="section alt">
+    <div class="container">
+      <div class="section-head"><div><span class="eyebrow">Centro de novedades</span><h2>Lo que está cambiando</h2><p>Anuncios, noticias, certificaciones y eventos del ecosistema Microsoft.</p></div><a class="text-link" href="/novedades/">Abrir centro →</a></div>
+      <div class="news-shell" data-news-shell>
+        <div class="tabs">
+          <button class="tab active" data-news-filter="Todos">Últimas</button>
+          <button class="tab" data-news-filter="Anuncios">Anuncios</button>
+          <button class="tab" data-news-filter="Noticias">Noticias</button>
+          <button class="tab" data-news-filter="Certificaciones">Certificaciones</button>
+          <button class="tab" data-news-filter="Eventos">Eventos</button>
+        </div>
+        <div class="news-list">
+          {news.length > 0 ? news.slice(0, 6).map((entry) => <NewsCard title={entry.data.title} newsType={entry.data.newsType} publishedAt={entry.data.publishedAt} url={contentUrl(entry)} />) : <div class="page-empty">Las novedades verificadas aparecerán aquí cuando el flujo de investigación y fuentes esté habilitado.</div>}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head"><div><span class="eyebrow">Categorías</span><h2>Explora por especialidad</h2></div><a class="text-link" href="/categorias/">Todas las categorías →</a></div>
+      <div class="category-grid">{categories.map((category) => <CategoryCard {...category} />)}</div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container">
+      <div class="section-head"><div><span class="eyebrow">Guías destacadas</span><h2>Aprende con profundidad</h2></div><a class="text-link" href="/guias/">Ver guías →</a></div>
+      <div class="cards">
+        {recentGuides.length > 0 ? recentGuides.map((entry) => <PostCard title={entry.data.title} summary={entry.data.summary} category={entry.data.category} label={contentLabel(entry)} publishedAt={entry.data.publishedAt} readMinutes={readingMinutes(entry.body)} url={contentUrl(entry)} cover={entry.data.cover} coverAlt={entry.data.coverAlt} />) : <div class="page-empty">Las guías aprobadas aparecerán aquí.</div>}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head"><div><span class="eyebrow">Recursos</span><h2>Materiales para aplicar</h2></div><a class="text-link" href="/recursos/">Abrir recursos →</a></div>
+      <div class="cards">{resources.slice(0, 3).map((resource) => <article class="card"><span class="badge">{resource.kind}</span><h3>{resource.title}</h3><p>{resource.description}</p><span class="resource-status">{resource.status}</span></article>)}</div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container author-block">
+      <div class="author-photo"><Image src={authorImage} alt="Irving Omar Patron Padron, autor de PatronTech" /></div>
+      <div class="author-copy"><span class="eyebrow">Sobre el autor</span><h2>Irving Omar Patron Padron</h2><p>Arquitecto cloud y consultor tecnológico con amplia experiencia en Microsoft Azure, arquitectura empresarial, migraciones, seguridad, gobierno, automatización y optimización de costos.</p><p>A través de PatronTech comparte noticias, guías, análisis y recursos prácticos para ayudar a profesionales y organizaciones a tomar mejores decisiones técnicas y acelerar su adopción de la nube.</p><a class="primary-btn" href="/sobre-mi/">Conocer más</a></div>
+    </div>
+  </section>
+  <Newsletter />
+  <script src="/scripts/filters.js" defer></script>
+</BaseLayout>

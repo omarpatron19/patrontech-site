@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 52" role="img" aria-labelledby="title">
+<title>PatronTech</title>
+<rect x="1" y="1" width="50" height="50" rx="12" fill="#0a1323" stroke="#2d3d55"/>
+<path d="M12 13h14c7 0 12 5 12 12s-5 12-12 12h-6v8h-8V13zm8 8v8h6c2.5 0 4-1.5 4-4s-1.5-4-4-4h-6z" fill="#f8fafc"/>
+<path d="M34 14h8v7h-8zM34 31h8v7h-8z" fill="#22d3ee"/>
+<text x="64" y="34" font-family="Georgia, 'Times New Roman', serif" font-size="27" font-weight="700" fill="#f8fafc">Patron</text>
+<text x="151" y="34" font-family="Arial, sans-serif" font-size="25" font-weight="700" fill="#60a5fa">Tech</text>
+</svg>

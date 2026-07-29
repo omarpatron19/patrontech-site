@@ -1,3 +1,8 @@
+node_modules/
+dist/
+.astro/
 .DS_Store
-.swa/
-*.log
+.env
+.env.*
+!.env.example
+npm-debug.log*

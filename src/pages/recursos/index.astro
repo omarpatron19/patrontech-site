@@ -1,0 +1,10 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { resources } from '../../data/resources';
+import { buildCollectionPageJsonLd } from '../../lib/seo';
+const structuredData = buildCollectionPageJsonLd('Recursos de Azure, Terraform y FinOps | PatronTech', 'Plantillas, checklists, diagramas, scripts y materiales de referencia para aplicar conceptos técnicos en Azure y cloud.', '/recursos/');
+---
+<BaseLayout title="Recursos de Azure, Terraform y FinOps | PatronTech" description="Plantillas, checklists, diagramas, scripts y materiales de referencia para aplicar conceptos técnicos en Azure y cloud." canonicalPath="/recursos/" structuredData={structuredData}>
+  <section class="page-hero"><div class="container"><span class="eyebrow">Material descargable</span><h1>Recursos</h1><p>Plantillas, checklists, diagramas, scripts y materiales de referencia para aplicar conceptos técnicos.</p></div></section>
+  <section class="section"><div class="container"><div class="listing">{resources.map((resource) => <article class="card"><span class="badge">{resource.kind}</span><h3>{resource.title}</h3><p>{resource.description}</p><span class="resource-status">{resource.status}</span></article>)}</div></div></section>
+</BaseLayout>

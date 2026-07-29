@@ -1,39 +1,22 @@
-# Despliegue en Azure Static Web Apps
+# Despliegue de PatronTech Astro
 
-Recurso existente:
-
-- Static Web App: `patrontech`
-- Resource Group: `Patronstech`
-- Subscription: `06d75d42-c725-4b6c-81ca-ba16169b2a84`
-
-## 1. Seleccionar suscripción
+## Local
 
 ```bash
-az account set --subscription "06d75d42-c725-4b6c-81ca-ba16169b2a84"
+npm install
+npm run build
 ```
 
-## 2. Obtener el token
+La salida se genera en `dist/`.
 
-```bash
-DEPLOYMENT_TOKEN=$(az staticwebapp secrets list   --name "patrontech"   --resource-group "Patronstech"   --query "properties.apiKey"   --output tsv)
+## Azure Static Web Apps
+
+Configura el workflow existente con:
+
+```yaml
+app_location: "/"
+output_location: "dist"
+app_build_command: "npm run build:azure"
 ```
 
-## 3. Instalar la CLI una sola vez
-
-```bash
-npm install -g @azure/static-web-apps-cli
-```
-
-## 4. Desplegar
-
-Ejecuta desde la carpeta que contiene `index.html`:
-
-```bash
-swa deploy .   --deployment-token "$DEPLOYMENT_TOKEN"   --env production
-```
-
-## 5. Consultar URL
-
-```bash
-az staticwebapp show   --name "patrontech"   --resource-group "Patronstech"   --query "defaultHostname"   --output tsv
-```
+El merge a `main` publica producción. Un Pull Request contra `main` crea la preview para revisión.

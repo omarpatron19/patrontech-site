@@ -1,0 +1,42 @@
+---
+const path = Astro.url.pathname;
+const navigation = [
+  { href: '/', label: 'Inicio' },
+  { href: '/articulos/', label: 'Artículos' },
+  { href: '/guias/', label: 'Guías' },
+  { href: '/novedades/', label: 'Novedades' },
+  { href: '/recursos/', label: 'Recursos' },
+  { href: '/categorias/', label: 'Categorías' },
+  { href: '/sobre-mi/', label: 'Sobre mí' }
+];
+const isActive = (href: string) => href === '/' ? path === '/' : path.startsWith(href);
+---
+<header class="site-header">
+  <div class="container header-inner">
+    <a aria-label="PatronTech, inicio" class="brand" href="/">
+      <span class="brand-mark">P<span>T</span></span>
+      <span class="brand-name">Patron<em>Tech</em></span>
+    </a>
+    <nav aria-label="Navegación principal" class="nav">
+      {navigation.map((item) => (
+        <a href={item.href} class:list={{ active: isActive(item.href) }} aria-current={isActive(item.href) ? 'page' : undefined}>
+          {item.label}
+        </a>
+      ))}
+    </nav>
+    <div class="header-actions">
+      <button aria-label="Cambiar tema" class="icon-btn" data-theme-toggle type="button">
+        <span data-theme-label>☾</span>
+      </button>
+      <a class="primary-btn" href="mailto:irvingomar19@hotmail.com">Contacto</a>
+      <button aria-label="Abrir menú" aria-expanded="false" class="icon-btn mobile-toggle" data-mobile-toggle type="button">☰</button>
+    </div>
+  </div>
+</header>
+<nav aria-label="Navegación móvil" class="mobile-menu" data-mobile-menu>
+  {navigation.map((item) => (
+    <a href={item.href} class:list={{ active: isActive(item.href) }} aria-current={isActive(item.href) ? 'page' : undefined}>
+      {item.label}
+    </a>
+  ))}
+</nav>

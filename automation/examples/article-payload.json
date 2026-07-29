@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "contentType": "article",
+  "title": "AZ-900: guía para comenzar con Microsoft Azure Fundamentals",
+  "slug": "az-900-guia-microsoft-azure-fundamentals",
+  "description": "Conoce los conceptos esenciales de AZ-900 y organiza una ruta de preparación clara para Microsoft Azure Fundamentals.",
+  "summary": "Una introducción práctica para comprender el objetivo de AZ-900 y organizar el estudio de los fundamentos de Microsoft Azure.",
+  "category": "Certificaciones",
+  "tags": [
+    "Azure",
+    "AZ-900",
+    "Certificaciones"
+  ],
+  "publishedAt": "2026-07-27",
+  "updatedAt": "2026-07-27",
+  "author": "Irving Omar Patron Padron",
+  "draft": false,
+  "featured": false,
+  "reviewStatus": "approved",
+  "coverAlt": "Conceptos fundamentales de Microsoft Azure representados para la certificación AZ-900",
+  "airtableRecordId": "recXXXXXXXXXXXXXX",
+  "contentMarkdown": "## Introducción\n\nMicrosoft Azure Fundamentals ofrece una ruta de entrada para comprender los conceptos de nube, los servicios principales de Azure, la seguridad, el gobierno y la administración de costos. Este contenido sirve como ejemplo aprobado para probar la automatización completa de PatronTech.\n\n![Mapa visual de los conceptos de Azure Fundamentals](./conceptos-azure.webp)\n\n## Conceptos principales\n\nLa preparación debe partir de conceptos verificables y de la documentación oficial. El artículo final puede incluir tablas, bloques de código, listas, enlaces y varias imágenes locales optimizadas durante el build.\n\n## Siguiente paso\n\nRevisa cada dominio del examen, practica con el portal de Azure y valida cualquier cambio reciente antes de presentar la certificación.",
+  "images": [
+    {
+      "fileName": "cover.webp",
+      "role": "cover",
+      "alt": "Conceptos fundamentales de Microsoft Azure representados para la certificación AZ-900",
+      "prompt": "Portada editorial tecnológica de Azure Fundamentals"
+    },
+    {
+      "fileName": "conceptos-azure.webp",
+      "role": "inline",
+      "alt": "Mapa visual de los conceptos de Azure Fundamentals",
+      "prompt": "Diagrama educativo de conceptos cloud",
+      "insertAfterHeading": "Introducción"
+    }
+  ]
+}

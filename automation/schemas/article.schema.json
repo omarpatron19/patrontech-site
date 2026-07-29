@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "contentType",
+    "title",
+    "slug",
+    "description",
+    "summary",
+    "category",
+    "tags",
+    "publishedAt",
+    "author",
+    "draft",
+    "featured",
+    "reviewStatus",
+    "coverAlt",
+    "contentMarkdown",
+    "images"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 110
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 50,
+      "maxLength": 170
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 50,
+      "maxLength": 320
+    },
+    "category": {
+      "enum": [
+        "Azure",
+        "Inteligencia Artificial",
+        "Arquitectura Cloud",
+        "FinOps",
+        "Automatización e IaC",
+        "Seguridad y Gobierno",
+        "Certificaciones",
+        "Comunidad"
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 2,
+        "maxLength": 40
+      },
+      "minItems": 1,
+      "maxItems": 12
+    },
+    "publishedAt": {
+      "type": "string",
+      "format": "date"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date"
+    },
+    "author": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 120
+    },
+    "draft": {
+      "const": false
+    },
+    "featured": {
+      "type": "boolean"
+    },
+    "reviewStatus": {
+      "const": "approved"
+    },
+    "coverAlt": {
+      "type": "string",
+      "minLength": 12,
+      "maxLength": 180
+    },
+    "imageCredit": {
+      "type": "string",
+      "maxLength": 180
+    },
+    "airtableRecordId": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "contentMarkdown": {
+      "type": "string",
+      "minLength": 200
+    },
+    "images": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "fileName",
+          "role",
+          "alt"
+        ],
+        "properties": {
+          "fileName": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._-]*\\.(png|jpg|jpeg|webp|avif)$"
+          },
+          "role": {
+            "enum": [
+              "cover",
+              "inline"
+            ]
+          },
+          "alt": {
+            "type": "string",
+            "minLength": 12,
+            "maxLength": 180
+          },
+          "prompt": {
+            "type": "string",
+            "minLength": 12,
+            "maxLength": 1200
+          },
+          "insertAfterHeading": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 180
+          }
+        }
+      },
+      "maxItems": 20,
+      "contains": {
+        "type": "object",
+        "required": [
+          "fileName",
+          "role",
+          "alt"
+        ],
+        "properties": {
+          "role": {
+            "const": "cover"
+          },
+          "fileName": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._-]*\\.(png|jpg|jpeg|webp|avif)$"
+          }
+        }
+      },
+      "minContains": 1,
+      "maxContains": 1
+    },
+    "contentType": {
+      "const": "article"
+    }
+  }
+}

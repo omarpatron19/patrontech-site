@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CategoryCard from '../../components/CategoryCard.astro';
+import { categories } from '../../data/categories';
+import { buildCollectionPageJsonLd } from '../../lib/seo';
+const structuredData = buildCollectionPageJsonLd('Categorías de Tecnología Cloud | PatronTech', 'Explora PatronTech por áreas de conocimiento: Azure, inteligencia artificial, arquitectura cloud, FinOps, automatización y seguridad.', '/categorias/');
+---
+<BaseLayout title="Categorías de Tecnología Cloud | PatronTech" description="Explora PatronTech por áreas de conocimiento: Azure, inteligencia artificial, arquitectura cloud, FinOps, automatización y seguridad." canonicalPath="/categorias/" structuredData={structuredData}>
+  <section class="page-hero"><div class="container"><span class="eyebrow">Especialidades</span><h1>Categorías</h1><p>Explora PatronTech por áreas de conocimiento y encuentra contenido alineado con tus intereses.</p></div></section>
+  <section class="section"><div class="container"><div class="category-grid">{categories.map((category) => <CategoryCard {...category} />)}</div></div></section>
+</BaseLayout>
