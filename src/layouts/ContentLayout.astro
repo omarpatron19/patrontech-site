@@ -1,0 +1,99 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata, MarkdownHeading } from 'astro';
+import BaseLayout from './BaseLayout.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+import { formatDate } from '../lib/content';
+
+interface Source { title: string; url: string; }
+interface Props {
+  title: string;
+  description: string;
+  summary: string;
+  canonicalPath: string;
+  category: string;
+  tags: string[];
+  label: string;
+  publishedAt: Date;
+  updatedAt?: Date;
+  eventDate?: Date;
+  readMinutes: number;
+  author: string;
+  cover: ImageMetadata;
+  coverAlt: string;
+  imageCredit?: string;
+  ogImage: string;
+  headings: MarkdownHeading[];
+  structuredData: Array<Record<string, unknown>>;
+  sources?: Source[];
+  level?: string;
+  durationMinutes?: number;
+  prerequisites?: string[];
+}
+const props = Astro.props;
+---
+<BaseLayout
+  title={`${props.title} | PatronTech`}
+  description={props.description}
+  canonicalPath={props.canonicalPath}
+  ogImage={props.ogImage}
+  ogImageAlt={props.coverAlt}
+  ogType="article"
+  publishedAt={props.publishedAt}
+  updatedAt={props.updatedAt}
+  articleSection={props.category}
+  articleTags={props.tags}
+  structuredData={props.structuredData}
+>
+  <section class="article-hero container">
+    <span class="badge">{props.category}</span>
+    <h1>{props.title}</h1>
+    <p>{props.summary}</p>
+    <div class="meta article-meta">
+      <span>{props.label}</span>
+      <span>{formatDate(props.publishedAt)}</span>
+      {props.eventDate && <span>Acontecimiento: {formatDate(props.eventDate)}</span>}
+      <span>{props.readMinutes} min</span>
+      <span>{props.author}</span>
+      {props.updatedAt && <span>Actualizado: {formatDate(props.updatedAt)}</span>}
+    </div>
+    {(props.level || props.durationMinutes) && (
+      <div class="guide-facts">
+        {props.level && <span><strong>Nivel:</strong> {props.level}</span>}
+        {props.durationMinutes && <span><strong>Duración:</strong> {props.durationMinutes} min</span>}
+      </div>
+    )}
+  </section>
+
+  <figure class="container article-cover-shell">
+    <Image
+      src={props.cover}
+      alt={props.coverAlt}
+      class="article-cover"
+      loading="eager"
+      fetchpriority="high"
+    />
+    {props.imageCredit && <figcaption class="cover-credit">Imagen: {props.imageCredit}</figcaption>}
+  </figure>
+
+  <section class="section article-section">
+    <div class="container article-layout">
+      <div>
+        {props.prerequisites && props.prerequisites.length > 0 && (
+          <aside class="content-callout">
+            <strong>Requisitos previos</strong>
+            <ul>{props.prerequisites.map((item) => <li>{item}</li>)}</ul>
+          </aside>
+        )}
+        <article class="article-body"><slot /></article>
+        {props.sources && props.sources.length > 0 && (
+          <section class="source-list" aria-labelledby="fuentes">
+            <h2 id="fuentes">Fuentes</h2>
+            <ol>{props.sources.map((source) => <li><a href={source.url} rel="noopener noreferrer" target="_blank">{source.title}</a></li>)}</ol>
+          </section>
+        )}
+      </div>
+      <TableOfContents headings={props.headings} />
+    </div>
+  </section>
+</BaseLayout>

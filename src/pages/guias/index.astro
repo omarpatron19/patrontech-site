@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getPublishedGuides, contentUrl, contentLabel, readingMinutes } from '../../lib/content';
+import { categories } from '../../data/categories';
+import { buildCollectionPageJsonLd } from '../../lib/seo';
+const entries = await getPublishedGuides();
+const structuredData = buildCollectionPageJsonLd('Guías de Azure, Cloud y FinOps | PatronTech', 'Rutas paso a paso, decisiones recomendadas y fundamentos para implementar soluciones cloud con mayor claridad.', '/guias/');
+---
+<BaseLayout title="Guías de Azure, Cloud y FinOps | PatronTech" description="Rutas paso a paso, decisiones recomendadas y fundamentos para implementar soluciones cloud con mayor claridad." canonicalPath="/guias/" structuredData={structuredData}>
+  <section class="page-hero"><div class="container"><span class="eyebrow">Contenido práctico</span><h1>Guías</h1><p>Rutas paso a paso, decisiones recomendadas y fundamentos para implementar soluciones con mayor claridad.</p></div></section>
+  <section class="section" data-filter-shell><div class="container">
+    <div class="toolbar"><div class="filter-row"><button class="filter-btn active" data-filter="Todos">Todas</button>{categories.map((category) => <button class="filter-btn" data-filter={category.name}>{category.name}</button>)}</div><input class="search-input" data-search type="search" placeholder="Buscar guías" aria-label="Buscar guías" /></div>
+    <div class="listing" data-filterable>{entries.map((entry) => <PostCard title={entry.data.title} summary={entry.data.summary} category={entry.data.category} label={contentLabel(entry)} publishedAt={entry.data.publishedAt} readMinutes={readingMinutes(entry.body)} url={contentUrl(entry)} cover={entry.data.cover} coverAlt={entry.data.coverAlt} />)}</div>
+    <div class="empty-state" data-empty hidden>No encontramos guías con esos criterios.</div>
+  </div></section>
+  <script src="/scripts/filters.js" defer></script>
+</BaseLayout>

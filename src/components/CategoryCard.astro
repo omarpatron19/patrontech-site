@@ -1,0 +1,9 @@
+---
+interface Props { name: string; icon: string; description: string; }
+const { name, icon, description } = Astro.props;
+---
+<a class="category-card" href={`/articulos/?categoria=${encodeURIComponent(name)}`}>
+  <span class="category-icon">{icon}</span>
+  <h3>{name}</h3>
+  <p>{description}</p>
+</a>

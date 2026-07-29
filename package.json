@@ -1,0 +1,29 @@
+{
+  "name": "patrontech-astro",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "check": "astro check",
+    "validate:content": "node scripts/validate-content.mjs",
+    "build": "npm run validate:content && npm test && astro check && astro build",
+    "build:azure": "npm run build",
+    "preview": "astro preview",
+    "content:create": "node scripts/create-content-entry.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "dependencies": {
+    "@astrojs/rss": "4.0.19",
+    "@astrojs/sitemap": "3.7.3",
+    "astro": "7.1.4",
+    "sharp": "0.35.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.9",
+    "typescript": "6.0.3"
+  }
+}

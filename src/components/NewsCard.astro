@@ -1,0 +1,14 @@
+---
+import { formatDate } from '../lib/content';
+interface Props {
+  title: string;
+  newsType: string;
+  publishedAt: Date;
+  url: string;
+}
+const { title, newsType, publishedAt, url } = Astro.props;
+---
+<article class="news-item" data-news-type={newsType}>
+  <div><span class="badge">{newsType}</span><br /><strong><a href={url}>{title}</a></strong></div>
+  <span class="meta">{formatDate(publishedAt)}</span>
+</article>

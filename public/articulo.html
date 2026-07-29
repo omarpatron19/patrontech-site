@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="noindex, follow" />
+  <title>Redirigiendo | PatronTech</title>
+  <meta http-equiv="refresh" content="2;url=/articulos/" />
+</head>
+<body>
+  <p>Redirigiendo a la nueva ruta de PatronTech…</p>
+  <script>
+    const slug = new URLSearchParams(location.search).get('slug');
+    const routes = {
+      'landing-zone-empresarial-azure': '/guias/landing-zone-empresarial-azure/',
+      'errores-terraform-infraestructura': '/articulos/errores-terraform-infraestructura/'
+    };
+    location.replace(routes[slug] || '/articulos/');
+  </script>
+</body>
+</html>
