@@ -435,3 +435,8 @@ nav,
   }
 }
 
+/* Respeta el atributo hidden aunque otro selector defina display */
+[hidden] {
+  display: none !important;
+}
+
