@@ -1,4 +1,5 @@
 ---
+
 schemaVersion: 1
 contentType: "guide"
 title: "Cómo diseñar una landing zone empresarial en Azure"
