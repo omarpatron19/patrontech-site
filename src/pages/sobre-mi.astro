@@ -3,7 +3,16 @@ import { Image, getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import authorImage from '../assets/brand/irving-omar-patron-padron.jpg';
 import { absoluteUrl } from '../lib/seo';
+
 const authorSocialImage = await getImage({ src: authorImage, width: 600, format: 'webp' });
+
+const certifications = [
+  'Azure Solutions Architect Expert',
+  'Microsoft Certified Trainer (MCT)',
+  'Azure Security Engineer Associate',
+  'Azure Network Engineer Associate'
+];
+
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'ProfilePage',
@@ -13,14 +22,173 @@ const structuredData = {
     name: 'Irving Omar Patron Padron',
     jobTitle: 'Arquitecto cloud y consultor tecnológico',
     image: absoluteUrl(authorSocialImage.src),
-    sameAs: ['https://www.linkedin.com/in/omarpatron/']
+    sameAs: ['https://www.linkedin.com/in/omarpatron/'],
+    knowsAbout: [
+      'Microsoft Azure',
+      'Cloud Architecture',
+      'Azure VMware Solution',
+      'Landing Zones',
+      'Cloud Security',
+      'FinOps',
+      'Infrastructure as Code',
+      'Terraform',
+      'Cloud Center of Excellence'
+    ]
   }
 };
 ---
-<BaseLayout title="Irving Omar Patron Padron | Sobre PatronTech" description="Conoce la experiencia de Irving Omar Patron Padron, arquitecto cloud, consultor tecnológico y creador de PatronTech." canonicalPath="/sobre-mi/" structuredData={structuredData}>
-  <section class="page-hero"><div class="container"><span class="eyebrow">Autor de PatronTech</span><h1>Irving Omar Patron Padron</h1><p>Arquitecto cloud, consultor tecnológico y creador de contenido especializado en el ecosistema Microsoft.</p></div></section>
-  <section class="section"><div class="container author-block">
-    <div class="author-photo"><Image src={authorImage} alt="Irving Omar Patron Padron" loading="eager" /></div>
-    <div class="author-copy"><h2>Experiencia práctica, claridad técnica y aprendizaje continuo</h2><p>Irving Omar Patron Padron es arquitecto cloud y consultor tecnológico con amplia experiencia en Microsoft Azure, arquitectura empresarial, migraciones, seguridad, gobierno, automatización y optimización de costos.</p><p>A lo largo de su trayectoria ha participado en iniciativas de transformación cloud para organizaciones de gran escala, diseñando arquitecturas, landing zones, estrategias de migración, modelos de gobierno, soluciones de continuidad y prácticas FinOps.</p><p>Cuenta con múltiples certificaciones de Microsoft y experiencia impartiendo cursos, talleres y sesiones técnicas sobre Azure, infraestructura como código, seguridad, arquitectura cloud y tecnologías emergentes.</p><p>A través de PatronTech comparte noticias, guías, análisis y recursos prácticos para ayudar a profesionales y organizaciones a tomar mejores decisiones técnicas.</p><div class="hero-actions"><a class="primary-btn" href="https://www.linkedin.com/in/omarpatron/" rel="noopener noreferrer" target="_blank">Ver LinkedIn</a><a class="secondary-btn" href="mailto:irvingomar19@hotmail.com">Contactar</a></div></div>
-  </div></section>
+
+<BaseLayout
+  title="Irving Omar Patron Padron | Sobre PatronTech"
+  description="Conoce la experiencia de Irving Omar Patron Padron, arquitecto cloud, consultor tecnológico, Microsoft Certified Trainer y creador de PatronTech."
+  canonicalPath="/sobre-mi/"
+  structuredData={structuredData}
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Autor de PatronTech</span>
+      <h1>Irving Omar Patron Padron</h1>
+      <p>
+        Arquitecto cloud, consultor tecnológico, líder técnico y formador especializado en
+        Microsoft Azure y transformación cloud.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container author-block">
+      <div class="author-photo">
+        <Image src={authorImage} alt="Irving Omar Patron Padron" loading="eager" />
+      </div>
+
+      <div class="author-copy">
+        <h2>Experiencia práctica, liderazgo técnico y aprendizaje continuo</h2>
+
+        <p>
+          Soy <strong>Irving Omar Patron Padron</strong>, arquitecto y consultor cloud con amplia
+          experiencia en la industria tecnológica, especializado en
+          <strong>Microsoft Azure, arquitectura de nube, migraciones, networking, seguridad,
+          FinOps y automatización</strong>.
+        </p>
+
+        <p>
+          A lo largo de mi trayectoria he participado en proyectos empresariales de transformación
+          y modernización cloud, trabajando en escenarios de
+          <strong>Azure VMware Solution, landing zones, conectividad híbrida, diseño de redes,
+          gobierno, seguridad, optimización de costos e Infrastructure as Code</strong>.
+          También he participado liderando iniciativas y equipos dentro de
+          <strong>Centros de Excelencia Cloud (Cloud CoE)</strong>, impulsando estándares,
+          buenas prácticas, adopción de tecnologías y desarrollo de capacidades técnicas.
+        </p>
+
+        <p>
+          Además de mi trabajo como consultor, soy <strong>Microsoft Certified Trainer (MCT)</strong>
+          y participo activamente en formación y comunidad tecnológica, impartiendo cursos,
+          talleres y sesiones técnicas orientadas a ayudar a estudiantes y profesionales a
+          entender cloud desde una perspectiva práctica y aplicable a proyectos reales.
+        </p>
+
+        <p>
+          Entre mis certificaciones más relevantes se encuentran
+          <strong>Microsoft Certified: Azure Solutions Architect Expert</strong>,
+          <strong>Azure Administrator Associate</strong>,
+          <strong>Azure Security Engineer Associate</strong> y
+          <strong>Azure Network Engineer Associate</strong>, además de credenciales en fundamentos
+          de Azure, datos, inteligencia artificial y seguridad, así como certificaciones y
+          experiencia en <strong>AWS y Oracle Cloud Infrastructure</strong>.
+        </p>
+
+        <p>
+          <strong>PatronTech</strong> nace como un espacio para compartir conocimiento técnico de
+          forma clara y práctica: arquitectura cloud, guías paso a paso, automatización, seguridad,
+          FinOps, certificaciones, novedades y recursos que puedan utilizarse tanto para aprender
+          como para resolver problemas reales.
+        </p>
+
+        <div class="certifications-block" aria-labelledby="certifications-title">
+          <h3 id="certifications-title">Certificaciones destacadas</h3>
+
+          <div class="certification-grid">
+            {certifications.map((certification) => (
+              <div class="certification-card">
+                <span class="certification-icon" aria-hidden="true">✓</span>
+                <span>{certification}</span>
+              </div>
+            ))}
+          </div>
+
+          <p class="certifications-note">
+            También certificado en Azure Administration, Azure Fundamentals, Data, AI, Security,
+            AWS y Oracle Cloud Infrastructure.
+          </p>
+        </div>
+
+        <div class="hero-actions">
+          <a
+            class="primary-btn"
+            href="https://www.linkedin.com/in/omarpatron/"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Ver LinkedIn
+          </a>
+          <a class="secondary-btn" href="mailto:irvingomar19@hotmail.com">Contactar</a>
+        </div>
+      </div>
+    </div>
+  </section>
 </BaseLayout>
+
+<style>
+  .certifications-block {
+    margin-top: 2rem;
+  }
+
+  .certifications-block h3 {
+    margin-bottom: 1rem;
+    font-size: clamp(1.1rem, 2vw, 1.3rem);
+  }
+
+  .certification-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .certification-card {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    min-height: 3.5rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--border, rgba(148, 163, 184, 0.18));
+    border-radius: 0.9rem;
+    background: rgba(15, 23, 42, 0.42);
+    font-size: 0.95rem;
+    line-height: 1.35;
+  }
+
+  .certification-icon {
+    display: inline-grid;
+    flex: 0 0 auto;
+    width: 1.6rem;
+    height: 1.6rem;
+    place-items: center;
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    border-radius: 999px;
+    color: rgb(125, 211, 252);
+    font-weight: 700;
+  }
+
+  .certifications-note {
+    margin-top: 0.85rem;
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
+
+  @media (max-width: 720px) {
+    .certification-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
