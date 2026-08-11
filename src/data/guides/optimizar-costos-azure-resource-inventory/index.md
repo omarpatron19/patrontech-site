@@ -1,4 +1,5 @@
 ---
+
 schemaVersion: 1
 contentType: "guide"
 title: "Cómo usar Azure Resource Inventory para un assessment FinOps en Azure"
@@ -16,11 +17,7 @@ cover: "./cover.webp"
 coverAlt: "Assessment FinOps con Azure Resource Inventory conectado con inventario, análisis de costos, validación y acciones de optimización"
 level: "Intermedio"
 durationMinutes: 60
-prerequisites:
-  - "Suscripción Azure o ambiente de laboratorio"
-  - "PowerShell 7"
-  - "Permisos de lectura sobre el alcance a inventariar"
-  - "Acceso a Azure Advisor y Cost Management para validar oportunidades"
+prerequisites: ["Suscripción Azure o ambiente de laboratorio", "PowerShell 7", "Permisos de lectura sobre el alcance a inventariar", "Acceso a Azure Advisor y Cost Management para validar oportunidades"]
 ---
 
 Optimizar costos en Azure no comienza comprando una reserva ni reduciendo el tamaño de una máquina virtual. Comienza entendiendo qué existe, quién lo utiliza, cómo está organizado y qué señales indican que un recurso podría estar desperdiciando presupuesto.

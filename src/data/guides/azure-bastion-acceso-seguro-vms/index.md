@@ -1,4 +1,5 @@
 ---
+
 schemaVersion: 1
 contentType: "guide"
 title: "Administra VMs sin IP pública con Azure Bastion"
@@ -17,11 +18,7 @@ coverAlt: "Arquitectura oficial de Microsoft para Azure Bastion mostrando acceso
 imageCredit: "Microsoft Learn — What is Azure Bastion?"
 level: "Inicial"
 durationMinutes: 40
-prerequisites:
-  - "Suscripción activa de Azure"
-  - "Una Virtual Network"
-  - "Una VM Windows o Linux sin necesidad de IP pública"
-  - "Permisos para desplegar Azure Bastion y modificar la red"
+prerequisites: ["Suscripción activa de Azure", "Una Virtual Network", "Una VM Windows o Linux sin necesidad de IP pública", "Permisos para desplegar Azure Bastion y modificar la red"]
 ---
 
 Exponer RDP o SSH directamente a Internet no debería ser el patrón predeterminado para administrar máquinas virtuales en Azure.

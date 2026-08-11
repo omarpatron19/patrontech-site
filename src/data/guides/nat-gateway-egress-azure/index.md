@@ -1,4 +1,5 @@
 ---
+
 schemaVersion: 1
 contentType: "guide"
 title: "Dale salida controlada a Internet a una subnet con Azure NAT Gateway"
@@ -17,11 +18,7 @@ coverAlt: "Arquitectura oficial de Microsoft de Azure NAT Gateway proporcionando
 imageCredit: "Microsoft Learn — NAT Gateway resource"
 level: "Inicial"
 durationMinutes: 35
-prerequisites:
-  - "Suscripción activa de Azure"
-  - "Una VNet y subnet"
-  - "Una VM o workload sin IP pública"
-  - "Permisos para crear NAT Gateway y Public IP"
+prerequisites: ["Suscripción activa de Azure", "Una VNet y subnet", "Una VM o workload sin IP pública", "Permisos para crear NAT Gateway y Public IP"]
 ---
 
 Los workloads privados también necesitan conectividad saliente.

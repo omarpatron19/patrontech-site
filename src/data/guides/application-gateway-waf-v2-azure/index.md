@@ -1,4 +1,5 @@
 ---
+
 schemaVersion: 1
 contentType: "guide"
 title: "Publica y protege aplicaciones con Azure Application Gateway WAF v2"
@@ -17,11 +18,7 @@ coverAlt: "Diagrama oficial de Microsoft de Azure Application Gateway con Web Ap
 imageCredit: "Microsoft Learn — Azure Web Application Firewall on Azure Application Gateway"
 level: "Intermedio"
 durationMinutes: 60
-prerequisites:
-  - "Suscripción activa de Azure"
-  - "Una VNet con espacio para subnet dedicada de Application Gateway"
-  - "Un backend HTTP o HTTPS accesible desde la VNet"
-  - "Permisos para crear Application Gateway, Public IP y WAF Policy"
+prerequisites: ["Suscripción activa de Azure", "Una VNet con espacio para subnet dedicada de Application Gateway", "Un backend HTTP o HTTPS accesible desde la VNet", "Permisos para crear Application Gateway, Public IP y WAF Policy"]
 ---
 
 **Azure Application Gateway** es un balanceador de tráfico web de capa 7. Puede tomar decisiones de enrutamiento a partir de propiedades HTTP como host y path, terminar TLS y distribuir tráfico hacia uno o más backends.

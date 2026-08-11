@@ -1,4 +1,5 @@
 ---
+
 schemaVersion: 1
 contentType: "guide"
 title: "Controla el tráfico saliente con Azure Firewall y rutas UDR"
@@ -17,11 +18,7 @@ coverAlt: "Diagrama oficial de Microsoft de Azure Firewall Standard inspeccionan
 imageCredit: "Microsoft Learn — Azure Firewall overview"
 level: "Intermedio"
 durationMinutes: 60
-prerequisites:
-  - "Suscripción activa de Azure"
-  - "Permisos para crear Azure Firewall, Public IP y Route Tables"
-  - "Conocimientos básicos de VNets, subnets y routing"
-  - "Una VM o workload de prueba"
+prerequisites: ["Suscripción activa de Azure", "Permisos para crear Azure Firewall, Public IP y Route Tables", "Conocimientos básicos de VNets, subnets y routing", "Una VM o workload de prueba"]
 ---
 
 Desplegar Azure Firewall no significa automáticamente que los workloads comiencen a utilizarlo.

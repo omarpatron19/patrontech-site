@@ -1,4 +1,5 @@
 ---
+
 schemaVersion: 1
 contentType: "guide"
 title: "Segmenta una aplicación de tres capas con Network Security Groups"
@@ -17,11 +18,7 @@ coverAlt: "Pantalla oficial de Microsoft Azure para asociar un Network Security 
 imageCredit: "Microsoft Learn — Create, change, or delete Azure Network Security Groups"
 level: "Inicial"
 durationMinutes: 45
-prerequisites:
-  - "Suscripción activa de Azure"
-  - "Una VNet con tres subnets o capacidad para crearla"
-  - "Permisos Network Contributor o equivalentes"
-  - "Opcional: VMs de prueba para validar conectividad"
+prerequisites: ["Suscripción activa de Azure", "Una VNet con tres subnets o capacidad para crearla", "Permisos Network Contributor o equivalentes", "Opcional: VMs de prueba para validar conectividad"]
 ---
 
 Los **Network Security Groups (NSG)** son uno de los controles fundamentales de segmentación en Azure.

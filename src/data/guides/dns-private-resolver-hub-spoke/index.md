@@ -1,4 +1,5 @@
 ---
+
 schemaVersion: 1
 contentType: "guide"
 title: "Resuelve DNS híbrido con Azure DNS Private Resolver"
@@ -17,11 +18,7 @@ coverAlt: "Arquitectura oficial de Microsoft de Azure DNS Private Resolver en un
 imageCredit: "Microsoft Learn — Azure DNS Private Resolver architecture guidance"
 level: "Intermedio"
 durationMinutes: 60
-prerequisites:
-  - "Suscripción activa de Azure"
-  - "Una VNet Hub y al menos una VNet Spoke"
-  - "VNet Peering configurado"
-  - "Conocimientos básicos de DNS y Azure Private DNS Zones"
+prerequisites: ["Suscripción activa de Azure", "Una VNet Hub y al menos una VNet Spoke", "VNet Peering configurado", "Conocimientos básicos de DNS y Azure Private DNS Zones"]
 ---
 
 Cuando una arquitectura utiliza **Private Endpoints**, redes híbridas y múltiples VNets, DNS deja de ser un detalle y se convierte en una pieza central del diseño.

@@ -1,4 +1,5 @@
 ---
+
 schemaVersion: 1
 contentType: "guide"
 title: "Aísla Azure Key Vault con Private Endpoint y acceso privado"
@@ -17,12 +18,7 @@ coverAlt: "Pantalla oficial de Microsoft para crear un Private Endpoint de Azure
 imageCredit: "Microsoft Learn — Integrate Key Vault with Azure Private Link"
 level: "Intermedio"
 durationMinutes: 45
-prerequisites:
-  - "Suscripción activa de Azure"
-  - "Azure Key Vault"
-  - "VNet y subnet disponible"
-  - "Permisos sobre Key Vault y la red"
-  - "VM o workload desde donde validar acceso privado"
+prerequisites: ["Suscripción activa de Azure", "Azure Key Vault", "VNet y subnet disponible", "Permisos sobre Key Vault y la red", "VM o workload desde donde validar acceso privado"]
 ---
 
 Azure Key Vault almacena secretos, certificados y claves. Proteger el control de identidad es indispensable, pero también puedes limitar **desde qué red** se consume el data plane.

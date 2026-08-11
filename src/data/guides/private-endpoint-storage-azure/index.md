@@ -1,4 +1,5 @@
 ---
+
 schemaVersion: 1
 contentType: "guide"
 title: "Acceso privado a Azure Storage: Private Endpoint y DNS paso a paso"
@@ -17,11 +18,7 @@ coverAlt: "Diagrama oficial de Microsoft del laboratorio de Azure Storage con Pr
 imageCredit: "Microsoft Learn — Connect to a storage account using an Azure Private Endpoint"
 level: "Intermedio"
 durationMinutes: 45
-prerequisites:
-  - "Suscripción activa de Azure"
-  - "Permisos para administrar Storage Accounts y Private Endpoints"
-  - "Virtual Network con una subnet disponible"
-  - "Acceso a una VM, Cloud Shell o workload desde donde validar DNS"
+prerequisites: ["Suscripción activa de Azure", "Permisos para administrar Storage Accounts y Private Endpoints", "Virtual Network con una subnet disponible", "Acceso a una VM, Cloud Shell o workload desde donde validar DNS"]
 ---
 
 Una Storage Account puede utilizarse sin exponer su acceso de datos a Internet. Con **Azure Private Endpoint**, el servicio obtiene una interfaz de red con una dirección IP privada dentro de tu VNet y el tráfico hacia el recurso utiliza Azure Private Link.

@@ -1,4 +1,5 @@
 ---
+
 schemaVersion: 1
 contentType: "guide"
 title: "Conecta redes de Azure con VNet Peering: laboratorio y validación"
@@ -17,11 +18,7 @@ coverAlt: "Pantalla oficial de Microsoft Azure para agregar un emparejamiento en
 imageCredit: "Microsoft Learn — Tutorial: Connect virtual networks with virtual network peering"
 level: "Inicial"
 durationMinutes: 35
-prerequisites:
-  - "Suscripción activa de Azure"
-  - "Permisos para crear o modificar Virtual Networks"
-  - "Dos VNets con rangos IP que no se traslapen"
-  - "Acceso al Azure Portal"
+prerequisites: ["Suscripción activa de Azure", "Permisos para crear o modificar Virtual Networks", "Dos VNets con rangos IP que no se traslapen", "Acceso al Azure Portal"]
 ---
 
 Conectar aplicaciones distribuidas en diferentes redes virtuales es una necesidad muy frecuente en Azure. **Virtual Network Peering** permite establecer conectividad privada entre dos VNets utilizando el backbone de Microsoft, sin necesitar una VPN entre ellas.

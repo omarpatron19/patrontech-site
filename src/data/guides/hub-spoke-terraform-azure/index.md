@@ -1,4 +1,5 @@
 ---
+
 schemaVersion: 1
 contentType: "guide"
 title: "Construye una topología Hub & Spoke en Azure con Terraform"
@@ -17,11 +18,7 @@ coverAlt: "Diagrama oficial de Microsoft de una arquitectura Hub and Spoke en Az
 imageCredit: "Microsoft Learn — Hub and spoke hybrid network topology with Terraform"
 level: "Intermedio"
 durationMinutes: 75
-prerequisites:
-  - "Suscripción activa de Azure"
-  - "Terraform instalado o Azure Cloud Shell"
-  - "Azure CLI autenticado"
-  - "Conocimientos básicos de Terraform y Azure Networking"
+prerequisites: ["Suscripción activa de Azure", "Terraform instalado o Azure Cloud Shell", "Azure CLI autenticado", "Conocimientos básicos de Terraform y Azure Networking"]
 ---
 
 Una de las mejores formas de aprender Hub & Spoke es desplegar una versión pequeña, entender las relaciones y después agregar servicios centrales.
