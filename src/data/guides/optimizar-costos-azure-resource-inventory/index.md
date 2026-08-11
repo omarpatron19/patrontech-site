@@ -1,19 +1,26 @@
 ---
 schemaVersion: 1
-contentType: "article"
-title: "Cómo optimizar costos en Azure con Azure Resource Inventory"
-description: "Aprende a usar Azure Resource Inventory para documentar tu entorno y priorizar oportunidades de optimización junto con Cost Management y Azure Advisor."
-summary: "Una metodología práctica para convertir el inventario técnico de Azure Resource Inventory en un backlog FinOps validado con costos, recomendaciones, métricas y contexto de negocio."
+contentType: "guide"
+title: "Cómo usar Azure Resource Inventory para un assessment FinOps en Azure"
+description: "Guía paso a paso para usar Azure Resource Inventory, analizar un entorno Azure y convertir hallazgos técnicos en un backlog FinOps accionable."
+summary: "Ejecuta Azure Resource Inventory, clasifica recursos, cruza hallazgos con Advisor, Cost Management y Monitor, y construye un backlog FinOps con evidencia, responsables y prioridades."
 category: "FinOps"
 tags: ["Azure", "FinOps", "Azure Resource Inventory", "Azure Advisor", "Cost Management", "Optimización"]
 publishedAt: "2026-08-05"
-updatedAt: "2026-08-05"
+updatedAt: "2026-08-10"
 author: "Irving Omar Patron Padron"
 draft: false
 featured: true
 reviewStatus: "approved"
 cover: "./cover.webp"
-coverAlt: "Inventario de recursos de Azure conectado con análisis de costos, recomendaciones y acciones FinOps"
+coverAlt: "Assessment FinOps con Azure Resource Inventory conectado con inventario, análisis de costos, validación y acciones de optimización"
+level: "Intermedio"
+durationMinutes: 60
+prerequisites:
+  - "Suscripción Azure o ambiente de laboratorio"
+  - "PowerShell 7"
+  - "Permisos de lectura sobre el alcance a inventariar"
+  - "Acceso a Azure Advisor y Cost Management para validar oportunidades"
 ---
 
 Optimizar costos en Azure no comienza comprando una reserva ni reduciendo el tamaño de una máquina virtual. Comienza entendiendo qué existe, quién lo utiliza, cómo está organizado y qué señales indican que un recurso podría estar desperdiciando presupuesto.
@@ -55,7 +62,7 @@ Una iniciativa de optimización necesita responder preguntas concretas:
 
 ARI no responde por sí solo todas estas preguntas, pero crea una base técnica consistente para investigarlas.
 
-## Cómo instalar y ejecutar Azure Resource Inventory
+## Paso 1. Instala y ejecuta Azure Resource Inventory
 
 Antes de comenzar, valida la documentación vigente del repositorio porque parámetros, requisitos y capacidades pueden evolucionar. En un entorno de prueba con PowerShell 7, el flujo general es:
 
@@ -87,11 +94,11 @@ Revisa al menos estos puntos:
 5. **Datos sensibles:** nombres, etiquetas y metadatos que podrían revelar información operativa.
 6. **Frecuencia:** ejecución puntual, mensual o integrada en una automatización.
 
-## Metodología práctica para analizar el reporte
+## Paso 2. Analiza el reporte con una metodología FinOps
 
 El reporte no debe convertirse en una lista indiscriminada de recursos para eliminar. La forma más segura es transformar cada hallazgo en un registro de trabajo con evidencia, responsable y validación.
 
-### 1. Clasifica recursos y ambientes
+### 2.1 Clasifica recursos y ambientes
 
 Separa los recursos por contexto operativo:
 
@@ -116,7 +123,7 @@ Etiquetas sugeridas:
 | `Criticality` | Nivel de criticidad |
 | `Lifecycle` | Activo, temporal, en retiro o excepción |
 
-### 2. Identifica candidatos a eliminación o apagado
+### 2.2 Identifica candidatos a eliminación o apagado
 
 ARI ayuda a localizar componentes que merecen revisión, por ejemplo:
 
@@ -139,7 +146,7 @@ Antes de eliminar:
 5. define una ventana de observación o cuarentena;
 6. conserva evidencia de la aprobación.
 
-### 3. Cruza el inventario con Azure Advisor
+### 2.3 Cruza el inventario con Azure Advisor
 
 Azure Advisor analiza configuración y telemetría para emitir recomendaciones en categorías como costo, confiabilidad, seguridad, rendimiento y excelencia operativa. En costos puede identificar recursos inactivos o subutilizados y sugerir acciones como apagar, redimensionar o evaluar compromisos.
 
@@ -156,7 +163,7 @@ El inventario de ARI facilita priorizar esas recomendaciones porque agrega conte
 
 No todas las recomendaciones deben implementarse. Una recomendación se evalúa contra los requisitos del servicio, el SLA, la estacionalidad, el riesgo y el costo de realizar el cambio.
 
-### 4. Valida con métricas de Azure Monitor
+### 2.4 Valida con métricas de Azure Monitor
 
 Para una máquina virtual, CPU baja no siempre significa sobredimensionamiento. También pueden importar:
 
@@ -171,7 +178,7 @@ Para una máquina virtual, CPU baja no siempre significa sobredimensionamiento. 
 
 Usa una ventana representativa. Un análisis de siete días puede ignorar el cierre contable mensual; uno de treinta días puede no capturar una campaña anual. El periodo debe reflejar el comportamiento real del negocio.
 
-### 5. Separa optimización de uso y optimización de tarifa
+### 2.5 Separa optimización de uso y optimización de tarifa
 
 **Optimización de uso** busca consumir solo lo necesario:
 
@@ -199,7 +206,7 @@ Microsoft recomienda aplicar las acciones de Advisor en este orden:
 
 Los cambios de tamaño o apagado modifican el patrón de consumo y, por lo tanto, las recomendaciones posteriores de compromiso.
 
-## Matriz de oportunidades
+## Paso 3. Construye la matriz de oportunidades
 
 ![Matriz de hallazgos del inventario, acciones propuestas, validaciones y prioridad FinOps.](./matriz-inventario-finops.webp)
 
@@ -212,7 +219,7 @@ Los cambios de tamaño o apagado modifican el patrón de consumo y, por lo tanto
 | Consumo estable | Cost Management | Evaluar Reservation o Savings Plan | Cobertura, utilización y horizonte |
 | Recurso sin propietario | ARI + CMDB o catálogo | Asignar responsable | Aplicación, centro de costo y criticidad |
 
-## Construye un backlog FinOps accionable
+## Paso 4. Convierte los hallazgos en un backlog FinOps
 
 El resultado del análisis debería ser un backlog, no únicamente un archivo Excel. Cada oportunidad puede registrar:
 
@@ -231,7 +238,7 @@ El resultado del análisis debería ser un backlog, no únicamente un archivo Ex
 
 Esta estructura permite medir ahorro potencial, ahorro aprobado y ahorro realizado por separado. Evita presentar como ahorro real una recomendación que todavía no se implementó o cuyo consumo podría reaparecer.
 
-## Qué no debe hacerse
+## Errores que debes evitar
 
 ### Eliminar recursos solo porque parecen inactivos
 
@@ -257,7 +264,7 @@ La automatización puede ayudar a aplicar horarios, etiquetas o cambios aprobado
 
 Para inventariar, empieza con lectura. Separa la identidad de descubrimiento de cualquier identidad capaz de modificar o eliminar recursos.
 
-## Cómo convertirlo en un proceso recurrente
+## Paso 5. Convierte el assessment en un proceso recurrente
 
 Una adopción progresiva reduce riesgo:
 
