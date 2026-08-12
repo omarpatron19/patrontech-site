@@ -1,67 +1,154 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { azureToolkit, resources } from '../../data/resources';
+import { cloudToolkit, resources } from '../../data/resources';
 import { buildCollectionPageJsonLd } from '../../lib/seo';
 
-const title = 'Azure Toolkit y recursos cloud | PatronTech';
-const description = 'Herramientas, plantillas, checklists y recursos prácticos para arquitectura Azure, FinOps, networking, sizing, automatización y gobierno.';
+const title = 'Cloud Toolkit y recursos cloud | PatronTech';
+const description = 'Herramientas curadas para Azure, AWS, Google Cloud y escenarios multicloud: FinOps, seguridad, networking, governance, sizing, migración, AI y automatización.';
 const structuredData = buildCollectionPageJsonLd(title, description, '/recursos/');
+
+const cloudOrder = ['Azure', 'AWS', 'GCP', 'Multicloud', 'Microsoft 365'];
+const categories = [...new Set(cloudToolkit.map((tool) => tool.category))].sort();
 ---
 
 <BaseLayout title={title} description={description} canonicalPath="/recursos/" structuredData={structuredData}>
   <section class="page-hero toolkit-hero">
     <div class="container">
-      <span class="eyebrow">PatronTech Azure Toolkit</span>
-      <h1>Herramientas que vale la pena tener a la mano</h1>
+      <span class="eyebrow">PatronTech Cloud Toolkit</span>
+      <h1>Herramientas para trabajar mejor en la nube</h1>
       <p>
-        Una selección curada de utilidades que ayudan a diseñar, evaluar, optimizar y operar ambientes Microsoft Azure.
-        No es solo una lista de enlaces: cada recurso está organizado por el problema que ayuda a resolver.
+        Una biblioteca curada de herramientas que ayudan a diseñar, evaluar, optimizar, asegurar y operar ambientes
+        Azure, AWS, Google Cloud y escenarios multicloud. Cada recurso incluye contexto sobre cuándo utilizarlo,
+        quién lo publica y si es open source.
       </p>
+
+      <div class="toolkit-stats" aria-label="Resumen del Cloud Toolkit">
+        <span><strong>{cloudToolkit.length}</strong> herramientas</span>
+        <span><strong>3</strong> hyperscalers</span>
+        <span><strong>{categories.length}</strong> categorías</span>
+      </div>
+
       <div class="hero-actions">
-        <a class="primary-btn" href="#azure-toolkit">Explorar herramientas</a>
-        <a class="secondary-btn" href="/articulos/4-herramientas-azure-profesionales/">Leer la guía</a>
+        <a class="primary-btn" href="#cloud-toolkit">Explorar herramientas</a>
+        <a class="secondary-btn" href="/articulos/4-herramientas-azure-profesionales/">Ver colección inicial</a>
       </div>
     </div>
   </section>
 
-  <section class="section" id="azure-toolkit">
+  <section class="section" id="cloud-toolkit">
     <div class="container">
-      <div class="section-head">
+      <div class="section-head toolkit-head">
         <div>
-          <span class="eyebrow">Azure Toolkit · Colección 01</span>
-          <h2>4 recursos para el trabajo diario con Azure</h2>
-          <p>Compute, FinOps, networking y assessment en una sola colección.</p>
+          <span class="eyebrow">Cloud Toolkit</span>
+          <h2>Encuentra la herramienta adecuada para cada escenario</h2>
+          <p>Filtra por proveedor, categoría o busca por nombre, descripción y etiquetas.</p>
         </div>
       </div>
 
-      <div class="toolkit-grid">
-        {azureToolkit.map((tool, index) => (
-          <article class="tool-card">
-            <div class="tool-card-top">
-              <span class="tool-number">0{index + 1}</span>
-              <span class="badge">{tool.kind}</span>
-            </div>
-            <p class="tool-category">{tool.category}</p>
-            <h3>{tool.title}</h3>
-            <p>{tool.description}</p>
-            <div class="tool-tags" aria-label={`Etiquetas de ${tool.title}`}>
-              {tool.tags.map((tag) => <span>{tag}</span>)}
-            </div>
-            <div class="tool-footer">
-              <small>{tool.source}</small>
-              <a class="text-link" href={tool.url} target="_blank" rel="noreferrer">Abrir herramienta ↗</a>
-            </div>
-          </article>
-        ))}
+      <div class="toolkit-controls" aria-label="Filtros del Cloud Toolkit">
+        <div class="cloud-filters" role="group" aria-label="Filtrar por nube">
+          <button class="filter-chip is-active" type="button" data-cloud-filter="all">Todas</button>
+          {cloudOrder.map((cloud) => (
+            <button class="filter-chip" type="button" data-cloud-filter={cloud}>{cloud}</button>
+          ))}
+        </div>
+
+        <div class="toolkit-search-row">
+          <label class="search-field">
+            <span class="sr-only">Buscar herramienta</span>
+            <input id="tool-search" type="search" placeholder="Buscar: FinOps, Prowler, AVS, sizing…" autocomplete="off" />
+          </label>
+
+          <label class="category-field">
+            <span class="sr-only">Filtrar por categoría</span>
+            <select id="category-filter">
+              <option value="all">Todas las categorías</option>
+              {categories.map((category) => <option value={category}>{category}</option>)}
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <p id="tool-count" class="result-count" aria-live="polite">Mostrando {cloudToolkit.length} herramientas</p>
+
+      <div class="toolkit-grid" id="toolkit-grid">
+        {cloudToolkit.map((tool, index) => {
+          const isMulticloud = tool.clouds.length > 1;
+          const searchable = [tool.title, tool.category, tool.description, tool.source, ...tool.tags, ...tool.clouds]
+            .join(' ')
+            .toLowerCase();
+
+          return (
+            <article
+              class="tool-card"
+              data-tool-card
+              data-clouds={tool.clouds.join('|')}
+              data-multicloud={isMulticloud ? 'true' : 'false'}
+              data-category={tool.category}
+              data-search={searchable}
+            >
+              <div class="tool-card-top">
+                <span class="tool-number">{String(index + 1).padStart(2, '0')}</span>
+                <span class={`status-badge status-${tool.status.toLowerCase().replace('–', '-').replaceAll(' ', '-')}`}>
+                  {tool.status}
+                </span>
+              </div>
+
+              <div class="cloud-badges" aria-label={`Nubes compatibles con ${tool.title}`}>
+                {tool.clouds.map((cloud) => <span class={`cloud-badge cloud-${cloud.toLowerCase().replace(' ', '-')}`}>{cloud}</span>)}
+                {isMulticloud && <span class="cloud-badge cloud-multicloud">Multicloud</span>}
+              </div>
+
+              <p class="tool-category">{tool.category}</p>
+              <h3>{tool.title}</h3>
+              <p class="tool-description">{tool.description}</p>
+
+              <dl class="tool-meta">
+                <div>
+                  <dt>Fuente</dt>
+                  <dd>{tool.sourceType}</dd>
+                </div>
+                <div>
+                  <dt>Open source</dt>
+                  <dd>{tool.openSource}</dd>
+                </div>
+                <div>
+                  <dt>Nivel</dt>
+                  <dd>{tool.level}</dd>
+                </div>
+              </dl>
+
+              <div class="tool-tags" aria-label={`Etiquetas de ${tool.title}`}>
+                {tool.tags.map((tag) => <span>{tag}</span>)}
+              </div>
+
+              <aside class="patron-tip">
+                <strong>Consejo PatronTech</strong>
+                <p>{tool.patronTip}</p>
+              </aside>
+
+              <div class="tool-footer">
+                <small>{tool.source}</small>
+                <a class="text-link" href={tool.url} target="_blank" rel="noreferrer">Abrir recurso ↗</a>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+
+      <div id="empty-state" class="empty-state" hidden>
+        <strong>No encontré herramientas con esos filtros.</strong>
+        <p>Prueba otra nube, categoría o término de búsqueda.</p>
       </div>
 
       <aside class="architect-note">
         <div class="note-icon" aria-hidden="true">PT</div>
         <div>
-          <strong>Consejo del arquitecto</strong>
+          <strong>Criterio antes que herramienta</strong>
           <p>
-            Usa estas herramientas para acelerar el análisis, no para reemplazarlo. Precio, latencia o una recomendación de sizing
-            deben validarse contra disponibilidad regional, arquitectura, seguridad, resiliencia, desempeño y contexto de negocio.
+            El objetivo del Cloud Toolkit es acelerar análisis y decisiones, no automatizar el criterio arquitectónico.
+            Antes de llevar una recomendación a producción valida documentación oficial, seguridad, resiliencia,
+            disponibilidad regional, costos, soporte y contexto de negocio.
           </p>
         </div>
       </aside>
@@ -71,11 +158,11 @@ const structuredData = buildCollectionPageJsonLd(title, description, '/recursos/
   <section class="section alt">
     <div class="container guide-callout">
       <div>
-        <span class="eyebrow">Guía PatronTech</span>
-        <h2>¿Cómo combinar estas cuatro herramientas?</h2>
+        <span class="eyebrow">Colección inicial</span>
+        <h2>4 herramientas para profesionales de Azure</h2>
         <p>
-          Revisa un flujo práctico para seleccionar una familia de VM, comparar alternativas de costo, validar regiones por latencia
-          y documentar el ambiente con Azure Resource Inventory.
+          La primera guía del Toolkit conecta Azure VM Series, CloudPrice, AzureSpeed y Azure Resource Inventory
+          dentro de un flujo práctico de sizing, costo, regiones y assessment.
         </p>
       </div>
       <a class="primary-btn" href="/articulos/4-herramientas-azure-profesionales/">Ver guía completa</a>
@@ -105,17 +192,96 @@ const structuredData = buildCollectionPageJsonLd(title, description, '/recursos/
   </section>
 </BaseLayout>
 
+<script>
+  const cards = Array.from(document.querySelectorAll('[data-tool-card]'));
+  const cloudButtons = Array.from(document.querySelectorAll('[data-cloud-filter]'));
+  const searchInput = document.querySelector('#tool-search');
+  const categoryFilter = document.querySelector('#category-filter');
+  const count = document.querySelector('#tool-count');
+  const emptyState = document.querySelector('#empty-state');
+
+  let activeCloud = 'all';
+
+  function applyFilters() {
+    const query = searchInput instanceof HTMLInputElement ? searchInput.value.trim().toLowerCase() : '';
+    const category = categoryFilter instanceof HTMLSelectElement ? categoryFilter.value : 'all';
+    let visible = 0;
+
+    cards.forEach((card) => {
+      if (!(card instanceof HTMLElement)) return;
+
+      const clouds = (card.dataset.clouds ?? '').split('|');
+      const multicloud = card.dataset.multicloud === 'true';
+      const cardCategory = card.dataset.category ?? '';
+      const searchable = card.dataset.search ?? '';
+
+      const cloudMatch =
+        activeCloud === 'all' ||
+        (activeCloud === 'Multicloud' ? multicloud : clouds.includes(activeCloud));
+      const categoryMatch = category === 'all' || cardCategory === category;
+      const searchMatch = !query || searchable.includes(query);
+      const show = cloudMatch && categoryMatch && searchMatch;
+
+      card.hidden = !show;
+      if (show) visible += 1;
+    });
+
+    if (count) count.textContent = `Mostrando ${visible} ${visible === 1 ? 'herramienta' : 'herramientas'}`;
+    if (emptyState instanceof HTMLElement) emptyState.hidden = visible !== 0;
+  }
+
+  cloudButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      if (!(button instanceof HTMLButtonElement)) return;
+      activeCloud = button.dataset.cloudFilter ?? 'all';
+      cloudButtons.forEach((item) => item.classList.toggle('is-active', item === button));
+      applyFilters();
+    });
+  });
+
+  searchInput?.addEventListener('input', applyFilters);
+  categoryFilter?.addEventListener('change', applyFilters);
+</script>
+
 <style>
-  .toolkit-hero p { max-width: 790px; }
+  .toolkit-hero p { max-width: 850px; }
+  .toolkit-stats { display: flex; flex-wrap: wrap; gap: 10px 22px; margin: 22px 0 0; color: var(--muted); }
+  .toolkit-stats span { display: inline-flex; align-items: baseline; gap: 6px; }
+  .toolkit-stats strong { color: var(--text); font-size: 1.05rem; }
+  .toolkit-head p { max-width: 760px; }
+  .toolkit-controls { display: grid; gap: 16px; margin: 0 0 18px; }
+  .cloud-filters { display: flex; flex-wrap: wrap; gap: 8px; }
+  .filter-chip { appearance: none; padding: 8px 13px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--muted); font: inherit; font-size: .86rem; font-weight: 800; cursor: pointer; }
+  .filter-chip:hover, .filter-chip.is-active { border-color: color-mix(in srgb,var(--primary) 62%,var(--border)); background: color-mix(in srgb,var(--primary) 9%,var(--surface)); color: var(--primary-2); }
+  .toolkit-search-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 320px); gap: 12px; }
+  .search-field input, .category-field select { width: 100%; min-height: 46px; padding: 10px 13px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--text); font: inherit; }
+  .result-count { margin: 0 0 16px; color: var(--muted); font-size: .9rem; font-weight: 700; }
   .toolkit-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
-  .tool-card { display: flex; flex-direction: column; min-height: 340px; padding: 26px; border: 1px solid var(--border); border-radius: 22px; background: var(--surface); box-shadow: 0 12px 36px rgba(15,23,42,.05); }
+  .tool-card { display: flex; flex-direction: column; min-height: 500px; padding: 26px; border: 1px solid var(--border); border-radius: 22px; background: var(--surface); box-shadow: 0 12px 36px rgba(15,23,42,.05); }
+  .tool-card[hidden] { display: none; }
   .tool-card-top, .tool-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
   .tool-number { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: .82rem; color: var(--muted); }
-  .tool-category { margin: 24px 0 5px; color: var(--primary-2); font-size: .84rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
-  .tool-card h3 { margin: 0 0 10px; font-family: "STIX Two Text", Georgia, serif; font-size: 1.65rem; line-height: 1.15; }
-  .tool-card > p:not(.tool-category) { margin: 0; color: var(--muted); }
-  .tool-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0; }
-  .tool-tags span { padding: 5px 9px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface-2); color: var(--muted); font-size: .78rem; font-weight: 700; }
+  .status-badge { display: inline-flex; align-items: center; padding: 5px 9px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface-2); color: var(--muted); font-size: .74rem; font-weight: 800; }
+  .status-activa { border-color: color-mix(in srgb,#16a34a 28%,var(--border)); }
+  .cloud-badges { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
+  .cloud-badge { padding: 5px 9px; border-radius: 999px; font-size: .74rem; font-weight: 900; border: 1px solid var(--border); background: var(--surface-2); }
+  .cloud-azure { color: #0078d4; border-color: color-mix(in srgb,#0078d4 35%,var(--border)); }
+  .cloud-aws { color: #d97706; border-color: color-mix(in srgb,#d97706 35%,var(--border)); }
+  .cloud-gcp { color: #1a73e8; border-color: color-mix(in srgb,#1a73e8 35%,var(--border)); }
+  .cloud-microsoft-365 { color: #7c3aed; border-color: color-mix(in srgb,#7c3aed 35%,var(--border)); }
+  .cloud-multicloud { color: var(--primary-2); }
+  .tool-category { margin: 20px 0 5px; color: var(--primary-2); font-size: .82rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
+  .tool-card h3 { margin: 0 0 10px; font-family: "STIX Two Text", Georgia, serif; font-size: 1.62rem; line-height: 1.15; }
+  .tool-description { margin: 0; color: var(--muted); }
+  .tool-meta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 20px 0 0; }
+  .tool-meta div { padding: 10px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-2); }
+  .tool-meta dt { margin-bottom: 3px; color: var(--muted); font-size: .7rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; }
+  .tool-meta dd { margin: 0; color: var(--text); font-size: .8rem; font-weight: 800; line-height: 1.3; }
+  .tool-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0; }
+  .tool-tags span { padding: 5px 9px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface-2); color: var(--muted); font-size: .76rem; font-weight: 700; }
+  .patron-tip { margin-bottom: 20px; padding: 14px 15px; border-left: 3px solid var(--primary); border-radius: 0 12px 12px 0; background: color-mix(in srgb,var(--primary) 6%,var(--surface)); }
+  .patron-tip strong { font-size: .82rem; }
+  .patron-tip p { margin: 5px 0 0; color: var(--muted); font-size: .86rem; }
   .tool-footer { margin-top: auto; padding-top: 18px; border-top: 1px solid var(--border); }
   .tool-footer small { color: var(--muted); }
   .architect-note { display: grid; grid-template-columns: auto 1fr; gap: 18px; margin-top: 24px; padding: 22px; border: 1px solid color-mix(in srgb,var(--primary) 32%,var(--border)); border-radius: 18px; background: color-mix(in srgb,var(--primary) 6%,var(--surface)); }
@@ -124,9 +290,18 @@ const structuredData = buildCollectionPageJsonLd(title, description, '/recursos/
   .guide-callout { display: flex; align-items: center; justify-content: space-between; gap: 36px; }
   .guide-callout h2 { margin: 5px 0 10px; font-family: "STIX Two Text", Georgia, serif; font-size: clamp(2rem,4vw,3rem); letter-spacing: -.03em; }
   .guide-callout p { max-width: 760px; margin: 0; color: var(--muted); }
+  .empty-state { margin: 18px 0; padding: 24px; border: 1px dashed var(--border); border-radius: 16px; text-align: center; }
+  .empty-state p { margin: 5px 0 0; color: var(--muted); }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+  @media (max-width: 900px) {
+    .tool-meta { grid-template-columns: 1fr; }
+  }
+
   @media (max-width: 760px) {
     .toolkit-grid { grid-template-columns: 1fr; }
     .tool-card { min-height: 0; }
+    .toolkit-search-row { grid-template-columns: 1fr; }
     .tool-footer { align-items: flex-start; flex-direction: column; gap: 8px; }
     .architect-note { grid-template-columns: 1fr; }
     .guide-callout { align-items: flex-start; flex-direction: column; }
