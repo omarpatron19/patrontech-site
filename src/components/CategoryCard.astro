@@ -1,8 +1,14 @@
 ---
-interface Props { name: string; icon: string; description: string; }
-const { name, icon, description } = Astro.props;
+interface Props {
+  name: string;
+  icon: string;
+  description: string;
+  href?: string;
+}
+const { name, icon, description, href } = Astro.props;
+const destination = href ?? `/articulos/?categoria=${encodeURIComponent(name)}`;
 ---
-<a class="category-card" href={`/articulos/?categoria=${encodeURIComponent(name)}`}>
+<a class="category-card" href={destination}>
   <span class="category-icon">{icon}</span>
   <h3>{name}</h3>
   <p>{description}</p>
