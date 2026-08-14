@@ -5,6 +5,6 @@ export const categories = [
   { name: 'FinOps', icon: '$', description: 'Costos, optimización, gobierno financiero y valor.' },
   { name: 'Automatización e IaC', icon: 'IaC', description: 'Terraform, Bicep, GitHub Actions y Azure DevOps.' },
   { name: 'Seguridad y Gobierno', icon: 'SG', description: 'Defender, Policy, Entra ID, Zero Trust y cumplimiento.' },
-  { name: 'Certificaciones', icon: 'CE', description: 'Mapa vigente, rutas de estudio, exámenes Microsoft y desarrollo profesional.', href: '/certificaciones/' },
+  { name: 'Certificaciones', icon: 'CE', description: 'Mapas vigentes, rutas de estudio y cambios de certificaciones Microsoft, AWS y Google Cloud.', href: '/certificaciones/' },
   { name: 'Comunidad', icon: 'CO', description: 'Eventos, aprendizaje, experiencias y colaboración tecnológica.' }
 ] as const;
