@@ -1,12 +1,16 @@
 export type CloudName = 'Azure' | 'AWS' | 'GCP' | 'Microsoft 365';
+
 export type SourceType =
   | 'Sitio oficial'
   | 'GitHub oficial'
   | 'GitHub community'
   | 'Sitio community'
   | 'Vendor / Open Source';
+
 export type OpenSourceStatus = 'Sí' | 'No' | 'No aplica' | 'No identificado';
-export type ToolStatus = 'Activa' | 'Mantenimiento' | 'Reemplazada';
+
+export type ToolStatus = 'Activa' | 'Mantenimiento' | 'Reemplazada' | 'Archivada';
+
 export type ToolLevel = 'Básico' | 'Intermedio' | 'Intermedio–Avanzado' | 'Avanzado';
 
 export const cloudToolkit = [
@@ -264,6 +268,195 @@ export const cloudToolkit = [
     tags: ['Security', 'Governance', 'Tenant', 'Compliance'],
     patronTip:
       'Tiene sentido para organizaciones que necesitan visibilidad centralizada a nivel tenant. Antes de desplegarlo, revisa cuidadosamente prerequisitos, permisos y cómo encajará con Defender for Cloud y tu modelo operativo.'
+  },
+
+  // Recursos adicionales — revisión editorial PatronTech 2026-08-14
+  {
+    slug: 'cartography',
+    title: 'Cartography',
+    clouds: ['Azure', 'AWS', 'GCP'] as CloudName[],
+    category: 'Assessment, relaciones y attack paths',
+    description:
+      'Proyecto CNCF Sandbox que ingiere activos y relaciones de múltiples plataformas en Neo4j para consultar identidades, exposición, dependencias y caminos entre recursos cloud.',
+    url: 'https://github.com/cartography-cncf/cartography',
+    sourceType: 'Vendor / Open Source' as SourceType,
+    source: 'CNCF / Cartography',
+    openSource: 'Sí' as OpenSourceStatus,
+    status: 'Activa' as ToolStatus,
+    level: 'Avanzado' as ToolLevel,
+    tags: ['Neo4j', 'Inventory', 'IAM', 'Attack Paths', 'Multicloud'],
+    patronTip:
+      'Úsalo cuando una lista plana de recursos ya no sea suficiente. El valor aparece al correlacionar identidad, red, vulnerabilidades y ownership para responder preguntas de exposición que cruzan cuentas, tenants o proveedores.'
+  },
+  {
+    slug: 'cloudmapper',
+    title: 'CloudMapper',
+    clouds: ['AWS'] as CloudName[],
+    category: 'Security y assessment',
+    description:
+      'Toolkit para analizar ambientes AWS mediante inventario, auditoría de configuraciones, revisión de privilegios, recursos públicos y activos sin uso. Su visualización de red histórica ya no se mantiene.',
+    url: 'https://github.com/duo-labs/cloudmapper',
+    sourceType: 'Vendor / Open Source' as SourceType,
+    source: 'Duo Labs',
+    openSource: 'Sí' as OpenSourceStatus,
+    status: 'Mantenimiento' as ToolStatus,
+    level: 'Intermedio–Avanzado' as ToolLevel,
+    tags: ['AWS', 'Security', 'Audit', 'IAM', 'Inventory'],
+    patronTip:
+      'No lo agregaría hoy por su antiguo mapa de red: esa función ya no está mantenida. Su valor sigue estando en comandos como audit, find_admins, find_unused y public para análisis puntual de cuentas AWS.'
+  },
+  {
+    slug: 'forseti-security',
+    title: 'Forseti Security',
+    clouds: ['GCP'] as CloudName[],
+    category: 'Security y compliance',
+    description:
+      'Proyecto histórico de seguridad para Google Cloud que realizaba inventario, escaneo de políticas y controles de compliance. El repositorio fue archivado y ya no recibe soporte del equipo original.',
+    url: 'https://github.com/forseti-security/forseti-security',
+    sourceType: 'GitHub community' as SourceType,
+    source: 'Forseti Security / Google-originated',
+    openSource: 'Sí' as OpenSourceStatus,
+    status: 'Archivada' as ToolStatus,
+    level: 'Avanzado' as ToolLevel,
+    tags: ['GCP', 'Security', 'Compliance', 'Legacy', 'Policy'],
+    patronTip:
+      'Consérvalo como referencia histórica o para entender instalaciones heredadas, pero no lo usaría como base de una implementación nueva. Para diseños actuales prioriza capacidades nativas de Google Cloud y proyectos con mantenimiento activo.'
+  },
+  {
+    slug: 'azure-quick-review',
+    title: 'Azure Quick Review (azqr)',
+    clouds: ['Azure'] as CloudName[],
+    category: 'Assessment y resiliencia',
+    description:
+      'CLI oficial de Azure que revisa recursos contra buenas prácticas y recomendaciones, genera inventario y action plans, e integra señales de Advisor, Defender for Cloud, Policy, costos y diagnostic settings.',
+    url: 'https://github.com/Azure/azqr',
+    sourceType: 'GitHub oficial' as SourceType,
+    source: 'Azure / Microsoft',
+    openSource: 'Sí' as OpenSourceStatus,
+    status: 'Activa' as ToolStatus,
+    level: 'Intermedio–Avanzado' as ToolLevel,
+    tags: ['Assessment', 'Resiliency', 'Advisor', 'Defender', 'Azure Policy'],
+    patronTip:
+      'Es de las herramientas que más priorizaría para assessments Azure actuales. Empieza con Reader a nivel Management Group o suscripción y habilita stages adicionales sólo cuando tengas claro qué permisos y datos necesitas.'
+  },
+  {
+    slug: 'cloudnetdraw',
+    title: 'CloudNet Draw',
+    clouds: ['Azure'] as CloudName[],
+    category: 'Networking y diagramación',
+    description:
+      'Herramienta Python que descubre topologías de Azure Virtual Network mediante Azure Resource Graph y genera diagramas Draw.io con hubs, spokes, subnets, peerings, NSG, UDR y Azure Firewall.',
+    url: 'https://github.com/krhatland/cloudnetdraw',
+    sourceType: 'GitHub community' as SourceType,
+    source: 'Kristoffer Hatland / Community',
+    openSource: 'Sí' as OpenSourceStatus,
+    status: 'Activa' as ToolStatus,
+    level: 'Intermedio' as ToolLevel,
+    tags: ['Networking', 'Draw.io', 'VNet', 'Hub-Spoke', 'Azure Resource Graph'],
+    patronTip:
+      'Muy útil para acelerar documentación de red porque entrega archivos .drawio editables. Valida manualmente rutas efectivas, propagación, appliances y dependencias que no puedan inferirse únicamente desde Resource Graph.'
+  },
+  {
+    slug: 'azviz',
+    title: 'AzViz',
+    clouds: ['Azure'] as CloudName[],
+    category: 'Arquitectura y diagramación',
+    description:
+      'Módulo PowerShell que descubre recursos dentro de uno o varios Resource Groups, identifica dependencias y genera diagramas de topología Azure en formatos como PNG y SVG usando GraphViz.',
+    url: 'https://github.com/PrateekKumarSingh/AzViz',
+    sourceType: 'GitHub community' as SourceType,
+    source: 'Prateek Kumar Singh / Community',
+    openSource: 'Sí' as OpenSourceStatus,
+    status: 'Activa' as ToolStatus,
+    level: 'Intermedio' as ToolLevel,
+    tags: ['Diagram', 'PowerShell', 'GraphViz', 'Topology', 'Documentation'],
+    patronTip:
+      'Funciona especialmente bien para documentación rápida a nivel Resource Group. Para una vista de networking editable y más enfocada en VNets, compáralo con CloudNet Draw antes de decidir cuál usar.'
+  },
+  {
+    slug: 'cloudblueprint-azure-iac',
+    title: 'CloudBlueprint',
+    clouds: ['Azure'] as CloudName[],
+    category: 'IaC y arquitectura',
+    description:
+      'Generador web para crear repositorios de Infrastructure as Code en Azure, workloads basados en Bicep y Azure Verified Modules, pipelines CI/CD y simulaciones de políticas WAF.',
+    url: 'https://azureblueprints.net/',
+    sourceType: 'Sitio community' as SourceType,
+    source: 'CloudBlueprint Community',
+    openSource: 'Sí' as OpenSourceStatus,
+    status: 'Activa' as ToolStatus,
+    level: 'Intermedio' as ToolLevel,
+    tags: ['Bicep', 'AVM', 'IaC', 'CI/CD', 'WAF'],
+    patronTip:
+      'No lo confundas con el servicio Azure Blueprints. Aquí hablamos de un generador de IaC. Úsalo para acelerar scaffolding, pero revisa el código generado, versiones de módulos, naming y controles de seguridad antes de desplegar.'
+  },
+  {
+    slug: 'azure-resource-graph-examples',
+    title: 'Azure Resource Graph Examples',
+    clouds: ['Azure'] as CloudName[],
+    category: 'Assessment e inventario',
+    description:
+      'Colección comunitaria de consultas Azure Resource Graph organizadas por compute, PaaS, networking, seguridad, Policy, tagging, alertas y recursos huérfanos, junto con una guía de introducción a ARG.',
+    url: 'https://github.com/scautomation/AzureResourceGraph-Examples/tree/master',
+    sourceType: 'GitHub community' as SourceType,
+    source: 'SCAutomation Community',
+    openSource: 'No identificado' as OpenSourceStatus,
+    status: 'Activa' as ToolStatus,
+    level: 'Intermedio' as ToolLevel,
+    tags: ['Azure Resource Graph', 'KQL', 'Inventory', 'Policy', 'Queries'],
+    patronTip:
+      'Úsalo como biblioteca de patrones, no como copy-paste ciego. Revisa resource types, API behavior y propiedades actuales; ARG cambia y una consulta antigua puede devolver datos incompletos o requerir ajustes.'
+  },
+  {
+    slug: 'microsoft-enterprise-security-assessment',
+    title: 'Microsoft Enterprise Security Assessment (ESA)',
+    clouds: ['Azure', 'Microsoft 365'] as CloudName[],
+    category: 'Security y assessment',
+    description:
+      'Herramientas oficiales de Microsoft para recopilar datos de seguridad y compliance de Defender for Cloud, Microsoft Cloud Security Benchmark y contexto de licenciamiento para un Enterprise Security Assessment.',
+    url: 'https://github.com/microsoft/ESA',
+    sourceType: 'GitHub oficial' as SourceType,
+    source: 'Microsoft',
+    openSource: 'Sí' as OpenSourceStatus,
+    status: 'Activa' as ToolStatus,
+    level: 'Avanzado' as ToolLevel,
+    tags: ['Defender for Cloud', 'MCSB', 'Secure Score', 'Assessment', 'PowerShell'],
+    patronTip:
+      'Tiene más sentido en assessments formales que en revisiones rápidas. Define previamente alcance, RBAC y permisos de directorio, y trata los CSV exportados como información sensible del entorno.'
+  },
+  {
+    slug: 'azure-ad-assessment',
+    title: 'Microsoft Azure AD Assessment',
+    clouds: ['Azure', 'Microsoft 365'] as CloudName[],
+    category: 'Identity y assessment',
+    description:
+      'Módulo PowerShell para evaluar estado y configuración de un tenant de Azure AD / Microsoft Entra, incluyendo recopilación del tenant y componentes híbridos como AD FS y Azure AD Connect.',
+    url: 'https://github.com/AzureAD/AzureADAssessment',
+    sourceType: 'GitHub oficial' as SourceType,
+    source: 'Microsoft / AzureAD',
+    openSource: 'Sí' as OpenSourceStatus,
+    status: 'Activa' as ToolStatus,
+    level: 'Avanzado' as ToolLevel,
+    tags: ['Entra ID', 'Azure AD', 'Identity', 'Hybrid Identity', 'Assessment'],
+    patronTip:
+      'Es una herramienta de assessment, no un scanner para ejecutar sin preparación. Revisa los permisos solicitados, usa una app dedicada y controla cuidadosamente los paquetes de datos generados antes de compartirlos o almacenarlos.'
+  },
+  {
+    slug: 'windows-cloud-academy',
+    title: 'Windows Cloud Academy',
+    clouds: ['Azure', 'Microsoft 365'] as CloudName[],
+    category: 'Laboratorios y aprendizaje',
+    description:
+      'Repositorio oficial de Microsoft con retos hands-on para aprender Windows 365 y Azure Virtual Desktop, incluyendo host pools, RDP, Insights, Intune, aplicaciones y escenarios de Windows 365.',
+    url: 'https://github.com/microsoft/WindowsCloudAcademy/tree/main',
+    sourceType: 'GitHub oficial' as SourceType,
+    source: 'Microsoft',
+    openSource: 'Sí' as OpenSourceStatus,
+    status: 'Activa' as ToolStatus,
+    level: 'Intermedio' as ToolLevel,
+    tags: ['AVD', 'Windows 365', 'Intune', 'Labs', 'DaaS'],
+    patronTip:
+      'Muy útil para formación porque está estructurado como retos prácticos. Úsalo como complemento de Microsoft Learn y valida costos, licencias y requisitos antes de reproducir laboratorios en un tenant propio.'
   }
 ] as const;
 
