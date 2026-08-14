@@ -9,6 +9,69 @@ const structuredData = buildCollectionPageJsonLd(title, description, '/recursos/
 
 const cloudOrder = ['Azure', 'AWS', 'GCP', 'Multicloud', 'Microsoft 365'];
 const categories = [...new Set(cloudToolkit.map((tool) => tool.category))].sort();
+
+const collectionDefinitions = [
+  {
+    id: 'assessment-azure',
+    label: 'Assessment',
+    title: 'Assessment de Azure',
+    description:
+      'Combina inventario, resiliencia, gobierno y postura de seguridad para construir una fotografía técnica del ambiente antes de recomendar cambios.',
+    toolSlugs: [
+      'azure-quick-review',
+      'azure-resource-inventory',
+      'azure-governance-visualizer',
+      'microsoft-enterprise-security-assessment'
+    ]
+  },
+  {
+    id: 'finops-optimizacion',
+    label: 'FinOps',
+    title: 'FinOps y optimización',
+    description:
+      'Herramientas para comparar costos, consultar consumo, automatizar análisis y acelerar conversaciones de optimización en Azure y AWS.',
+    toolSlugs: [
+      'cloudprice',
+      'azure-cost-cli',
+      'azure-finops-guide',
+      'aws-finops-dashboard'
+    ]
+  },
+  {
+    id: 'arquitectura-visualizacion',
+    label: 'Arquitectura',
+    title: 'Arquitectura y visualización',
+    description:
+      'Recursos para entender topologías, dependencias y relaciones entre componentes y convertir ambientes existentes en documentación útil.',
+    toolSlugs: [
+      'cloudnetdraw',
+      'azviz',
+      'azure-charts',
+      'cartography'
+    ]
+  },
+  {
+    id: 'security-multicloud',
+    label: 'Security',
+    title: 'Security multicloud',
+    description:
+      'Combina posture assessment, relaciones de identidad y recursos, análisis AWS y controles de seguridad para revisar exposición con una mirada más amplia.',
+    toolSlugs: [
+      'prowler',
+      'cartography',
+      'cloudmapper',
+      'azure-tenant-security'
+    ]
+  }
+];
+
+const toolkitCollections = collectionDefinitions.map((collection) => ({
+  ...collection,
+  toolNames: collection.toolSlugs.map((slug) => {
+    const tool = cloudToolkit.find((item) => item.slug === slug);
+    return tool?.title ?? slug;
+  })
+}));
 ---
 
 <BaseLayout title={title} description={description} canonicalPath="/recursos/" structuredData={structuredData}>
@@ -30,7 +93,7 @@ const categories = [...new Set(cloudToolkit.map((tool) => tool.category))].sort(
 
       <div class="hero-actions">
         <a class="primary-btn" href="#cloud-toolkit">Explorar herramientas</a>
-        <a class="secondary-btn" href="/articulos/4-herramientas-azure-profesionales/">Ver colección inicial</a>
+        <a class="secondary-btn" href="#colecciones">Ver colecciones recomendadas</a>
       </div>
     </div>
   </section>
@@ -43,6 +106,21 @@ const categories = [...new Set(cloudToolkit.map((tool) => tool.category))].sort(
           <h2>Encuentra la herramienta adecuada para cada escenario</h2>
           <p>Filtra por proveedor, categoría o busca por nombre, descripción y etiquetas.</p>
         </div>
+      </div>
+
+      <div
+        class="active-collection"
+        id="active-collection"
+        aria-live="polite"
+        hidden
+      >
+        <div>
+          <span class="active-collection-label">Colección activa</span>
+          <strong id="active-collection-name">Colección</strong>
+        </div>
+        <button type="button" class="collection-clear" id="clear-collection">
+          Quitar colección
+        </button>
       </div>
 
       <div class="toolkit-controls" aria-label="Filtros del Cloud Toolkit">
@@ -69,12 +147,21 @@ const categories = [...new Set(cloudToolkit.map((tool) => tool.category))].sort(
         </div>
       </div>
 
-      <p id="tool-count" class="result-count" aria-live="polite">Mostrando {cloudToolkit.length} herramientas</p>
+      <p id="tool-count" class="result-count" aria-live="polite">
+        Mostrando {cloudToolkit.length} herramientas
+      </p>
 
       <div class="toolkit-grid" id="toolkit-grid">
         {cloudToolkit.map((tool, index) => {
           const isMulticloud = tool.clouds.length > 1;
-          const searchable = [tool.title, tool.category, tool.description, tool.source, ...tool.tags, ...tool.clouds]
+          const searchable = [
+            tool.title,
+            tool.category,
+            tool.description,
+            tool.source,
+            ...tool.tags,
+            ...tool.clouds
+          ]
             .join(' ')
             .toLowerCase();
 
@@ -82,6 +169,7 @@ const categories = [...new Set(cloudToolkit.map((tool) => tool.category))].sort(
             <article
               class="tool-card"
               data-tool-card
+              data-tool-slug={tool.slug}
               data-clouds={tool.clouds.join('|')}
               data-multicloud={isMulticloud ? 'true' : 'false'}
               data-category={tool.category}
@@ -89,13 +177,20 @@ const categories = [...new Set(cloudToolkit.map((tool) => tool.category))].sort(
             >
               <div class="tool-card-top">
                 <span class="tool-number">{String(index + 1).padStart(2, '0')}</span>
-                <span class={`status-badge status-${tool.status.toLowerCase().replace('–', '-').replaceAll(' ', '-')}`}>
+                <span
+                  class={`status-badge status-${tool.status
+                    .toLowerCase()
+                    .replace('–', '-')
+                    .replaceAll(' ', '-')}`}
+                >
                   {tool.status}
                 </span>
               </div>
 
               <div class="cloud-badges" aria-label={`Nubes compatibles con ${tool.title}`}>
-                {tool.clouds.map((cloud) => <span class={`cloud-badge cloud-${cloud.toLowerCase().replace(' ', '-')}`}>{cloud}</span>)}
+                {tool.clouds.map((cloud) => (
+                  <span class={`cloud-badge cloud-${cloud.toLowerCase().replace(' ', '-')}`}>{cloud}</span>
+                ))}
                 {isMulticloud && <span class="cloud-badge cloud-multicloud">Multicloud</span>}
               </div>
 
@@ -138,7 +233,7 @@ const categories = [...new Set(cloudToolkit.map((tool) => tool.category))].sort(
 
       <div id="empty-state" class="empty-state" hidden>
         <strong>No encontré herramientas con esos filtros.</strong>
-        <p>Prueba otra nube, categoría o término de búsqueda.</p>
+        <p>Prueba otra nube, categoría, colección o término de búsqueda.</p>
       </div>
 
       <aside class="architect-note">
@@ -155,17 +250,56 @@ const categories = [...new Set(cloudToolkit.map((tool) => tool.category))].sort(
     </div>
   </section>
 
-  <section class="section alt">
-    <div class="container guide-callout">
-      <div>
-        <span class="eyebrow">Colección inicial</span>
-        <h2>4 herramientas para profesionales de Azure</h2>
-        <p>
-          La primera guía del Toolkit conecta Azure VM Series, CloudPrice, AzureSpeed y Azure Resource Inventory
-          dentro de un flujo práctico de sizing, costo, regiones y assessment.
-        </p>
+  <section class="section alt" id="colecciones">
+    <div class="container">
+      <div class="section-head collections-head">
+        <div>
+          <span class="eyebrow">Colecciones recomendadas</span>
+          <h2>Empieza por el problema que quieres resolver</h2>
+          <p>
+            En lugar de recorrer herramienta por herramienta, usa estas selecciones como punto de partida
+            para escenarios frecuentes de assessment, FinOps, arquitectura y seguridad.
+          </p>
+        </div>
       </div>
-      <a class="primary-btn" href="/articulos/4-herramientas-azure-profesionales/">Ver guía completa</a>
+
+      <div class="collection-grid">
+        {toolkitCollections.map((collection) => (
+          <article class="collection-card">
+            <span class="collection-label">{collection.label}</span>
+            <h3>{collection.title}</h3>
+            <p>{collection.description}</p>
+
+            <div class="collection-tools" aria-label={`Herramientas de ${collection.title}`}>
+              {collection.toolNames.map((toolName) => <span>{toolName}</span>)}
+            </div>
+
+            <button
+              type="button"
+              class="secondary-btn collection-action"
+              data-tool-collection
+              data-collection-name={collection.title}
+              data-collection-slugs={collection.toolSlugs.join('|')}
+            >
+              Mostrar en Toolkit
+            </button>
+          </article>
+        ))}
+      </div>
+
+      <aside class="starter-callout">
+        <div>
+          <span class="eyebrow">Para empezar con Azure</span>
+          <h3>4 herramientas para profesionales de Azure</h3>
+          <p>
+            La guía original del Toolkit conecta Azure VM Series, CloudPrice, AzureSpeed y
+            Azure Resource Inventory dentro de un flujo práctico de sizing, costo, regiones y assessment.
+          </p>
+        </div>
+        <a class="text-link starter-link" href="/articulos/4-herramientas-azure-profesionales/">
+          Leer guía original →
+        </a>
+      </aside>
     </div>
   </section>
 
@@ -178,6 +312,7 @@ const categories = [...new Set(cloudToolkit.map((tool) => tool.category))].sort(
           <p>Plantillas y materiales propios que iremos incorporando a la biblioteca.</p>
         </div>
       </div>
+
       <div class="listing">
         {resources.map((resource) => (
           <article class="card">
@@ -195,16 +330,46 @@ const categories = [...new Set(cloudToolkit.map((tool) => tool.category))].sort(
 <script>
   const cards = Array.from(document.querySelectorAll('[data-tool-card]'));
   const cloudButtons = Array.from(document.querySelectorAll('[data-cloud-filter]'));
+  const collectionButtons = Array.from(document.querySelectorAll('[data-tool-collection]'));
   const searchInput = document.querySelector('#tool-search');
   const categoryFilter = document.querySelector('#category-filter');
   const count = document.querySelector('#tool-count');
   const emptyState = document.querySelector('#empty-state');
+  const activeCollection = document.querySelector('#active-collection');
+  const activeCollectionName = document.querySelector('#active-collection-name');
+  const clearCollectionButton = document.querySelector('#clear-collection');
 
   let activeCloud = 'all';
+  let activeCollectionSlugs: Set<string> | null = null;
+
+  function resetCloudFilter() {
+    activeCloud = 'all';
+    cloudButtons.forEach((button) => {
+      if (!(button instanceof HTMLButtonElement)) return;
+      button.classList.toggle('is-active', button.dataset.cloudFilter === 'all');
+    });
+  }
+
+  function updateCollectionBanner(name = '') {
+    if (!(activeCollection instanceof HTMLElement)) return;
+
+    const hasCollection = activeCollectionSlugs instanceof Set && activeCollectionSlugs.size > 0;
+    activeCollection.hidden = !hasCollection;
+
+    if (activeCollectionName instanceof HTMLElement && hasCollection) {
+      activeCollectionName.textContent = name;
+    }
+  }
 
   function applyFilters() {
-    const query = searchInput instanceof HTMLInputElement ? searchInput.value.trim().toLowerCase() : '';
-    const category = categoryFilter instanceof HTMLSelectElement ? categoryFilter.value : 'all';
+    const query = searchInput instanceof HTMLInputElement
+      ? searchInput.value.trim().toLowerCase()
+      : '';
+
+    const category = categoryFilter instanceof HTMLSelectElement
+      ? categoryFilter.value
+      : 'all';
+
     let visible = 0;
 
     cards.forEach((card) => {
@@ -214,29 +379,77 @@ const categories = [...new Set(cloudToolkit.map((tool) => tool.category))].sort(
       const multicloud = card.dataset.multicloud === 'true';
       const cardCategory = card.dataset.category ?? '';
       const searchable = card.dataset.search ?? '';
+      const toolSlug = card.dataset.toolSlug ?? '';
 
       const cloudMatch =
         activeCloud === 'all' ||
         (activeCloud === 'Multicloud' ? multicloud : clouds.includes(activeCloud));
+
       const categoryMatch = category === 'all' || cardCategory === category;
       const searchMatch = !query || searchable.includes(query);
-      const show = cloudMatch && categoryMatch && searchMatch;
+      const collectionMatch =
+        !(activeCollectionSlugs instanceof Set) ||
+        activeCollectionSlugs.has(toolSlug);
+
+      const show = cloudMatch && categoryMatch && searchMatch && collectionMatch;
 
       card.hidden = !show;
       if (show) visible += 1;
     });
 
-    if (count) count.textContent = `Mostrando ${visible} ${visible === 1 ? 'herramienta' : 'herramientas'}`;
-    if (emptyState instanceof HTMLElement) emptyState.hidden = visible !== 0;
+    if (count) {
+      count.textContent = `Mostrando ${visible} ${visible === 1 ? 'herramienta' : 'herramientas'}`;
+    }
+
+    if (emptyState instanceof HTMLElement) {
+      emptyState.hidden = visible !== 0;
+    }
   }
 
   cloudButtons.forEach((button) => {
     button.addEventListener('click', () => {
       if (!(button instanceof HTMLButtonElement)) return;
+
       activeCloud = button.dataset.cloudFilter ?? 'all';
       cloudButtons.forEach((item) => item.classList.toggle('is-active', item === button));
       applyFilters();
     });
+  });
+
+  collectionButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      if (!(button instanceof HTMLButtonElement)) return;
+
+      const slugs = (button.dataset.collectionSlugs ?? '')
+        .split('|')
+        .map((slug) => slug.trim())
+        .filter(Boolean);
+
+      activeCollectionSlugs = new Set(slugs);
+
+      if (searchInput instanceof HTMLInputElement) {
+        searchInput.value = '';
+      }
+
+      if (categoryFilter instanceof HTMLSelectElement) {
+        categoryFilter.value = 'all';
+      }
+
+      resetCloudFilter();
+      updateCollectionBanner(button.dataset.collectionName ?? 'Colección recomendada');
+      applyFilters();
+
+      document.querySelector('#cloud-toolkit')?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    });
+  });
+
+  clearCollectionButton?.addEventListener('click', () => {
+    activeCollectionSlugs = null;
+    updateCollectionBanner();
+    applyFilters();
   });
 
   searchInput?.addEventListener('input', applyFilters);
@@ -244,66 +457,505 @@ const categories = [...new Set(cloudToolkit.map((tool) => tool.category))].sort(
 </script>
 
 <style>
-  .toolkit-hero p { max-width: 850px; }
-  .toolkit-stats { display: flex; flex-wrap: wrap; gap: 10px 22px; margin: 22px 0 0; color: var(--muted); }
-  .toolkit-stats span { display: inline-flex; align-items: baseline; gap: 6px; }
-  .toolkit-stats strong { color: var(--text); font-size: 1.05rem; }
-  .toolkit-head p { max-width: 760px; }
-  .toolkit-controls { display: grid; gap: 16px; margin: 0 0 18px; }
-  .cloud-filters { display: flex; flex-wrap: wrap; gap: 8px; }
-  .filter-chip { appearance: none; padding: 8px 13px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--muted); font: inherit; font-size: .86rem; font-weight: 800; cursor: pointer; }
-  .filter-chip:hover, .filter-chip.is-active { border-color: color-mix(in srgb,var(--primary) 62%,var(--border)); background: color-mix(in srgb,var(--primary) 9%,var(--surface)); color: var(--primary-2); }
-  .toolkit-search-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 320px); gap: 12px; }
-  .search-field input, .category-field select { width: 100%; min-height: 46px; padding: 10px 13px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--text); font: inherit; }
-  .result-count { margin: 0 0 16px; color: var(--muted); font-size: .9rem; font-weight: 700; }
-  .toolkit-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
-  .tool-card { display: flex; flex-direction: column; min-height: 500px; padding: 26px; border: 1px solid var(--border); border-radius: 22px; background: var(--surface); box-shadow: 0 12px 36px rgba(15,23,42,.05); }
-  .tool-card[hidden] { display: none; }
-  .tool-card-top, .tool-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-  .tool-number { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: .82rem; color: var(--muted); }
-  .status-badge { display: inline-flex; align-items: center; padding: 5px 9px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface-2); color: var(--muted); font-size: .74rem; font-weight: 800; }
-  .status-activa { border-color: color-mix(in srgb,#16a34a 28%,var(--border)); }
-  .cloud-badges { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
-  .cloud-badge { padding: 5px 9px; border-radius: 999px; font-size: .74rem; font-weight: 900; border: 1px solid var(--border); background: var(--surface-2); }
-  .cloud-azure { color: #0078d4; border-color: color-mix(in srgb,#0078d4 35%,var(--border)); }
-  .cloud-aws { color: #d97706; border-color: color-mix(in srgb,#d97706 35%,var(--border)); }
-  .cloud-gcp { color: #1a73e8; border-color: color-mix(in srgb,#1a73e8 35%,var(--border)); }
-  .cloud-microsoft-365 { color: #7c3aed; border-color: color-mix(in srgb,#7c3aed 35%,var(--border)); }
-  .cloud-multicloud { color: var(--primary-2); }
-  .tool-category { margin: 20px 0 5px; color: var(--primary-2); font-size: .82rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
-  .tool-card h3 { margin: 0 0 10px; font-family: "STIX Two Text", Georgia, serif; font-size: 1.62rem; line-height: 1.15; }
-  .tool-description { margin: 0; color: var(--muted); }
-  .tool-meta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 20px 0 0; }
-  .tool-meta div { padding: 10px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-2); }
-  .tool-meta dt { margin-bottom: 3px; color: var(--muted); font-size: .7rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; }
-  .tool-meta dd { margin: 0; color: var(--text); font-size: .8rem; font-weight: 800; line-height: 1.3; }
-  .tool-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0; }
-  .tool-tags span { padding: 5px 9px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface-2); color: var(--muted); font-size: .76rem; font-weight: 700; }
-  .patron-tip { margin-bottom: 20px; padding: 14px 15px; border-left: 3px solid var(--primary); border-radius: 0 12px 12px 0; background: color-mix(in srgb,var(--primary) 6%,var(--surface)); }
-  .patron-tip strong { font-size: .82rem; }
-  .patron-tip p { margin: 5px 0 0; color: var(--muted); font-size: .86rem; }
-  .tool-footer { margin-top: auto; padding-top: 18px; border-top: 1px solid var(--border); }
-  .tool-footer small { color: var(--muted); }
-  .architect-note { display: grid; grid-template-columns: auto 1fr; gap: 18px; margin-top: 24px; padding: 22px; border: 1px solid color-mix(in srgb,var(--primary) 32%,var(--border)); border-radius: 18px; background: color-mix(in srgb,var(--primary) 6%,var(--surface)); }
-  .architect-note p { margin: 5px 0 0; color: var(--muted); }
-  .note-icon { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 12px; background: var(--primary); color: white; font-weight: 900; }
-  .guide-callout { display: flex; align-items: center; justify-content: space-between; gap: 36px; }
-  .guide-callout h2 { margin: 5px 0 10px; font-family: "STIX Two Text", Georgia, serif; font-size: clamp(2rem,4vw,3rem); letter-spacing: -.03em; }
-  .guide-callout p { max-width: 760px; margin: 0; color: var(--muted); }
-  .empty-state { margin: 18px 0; padding: 24px; border: 1px dashed var(--border); border-radius: 16px; text-align: center; }
-  .empty-state p { margin: 5px 0 0; color: var(--muted); }
-  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+  .toolkit-hero p {
+    max-width: 850px;
+  }
+
+  .toolkit-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 22px;
+    margin: 22px 0 0;
+    color: var(--muted);
+  }
+
+  .toolkit-stats span {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+
+  .toolkit-stats strong {
+    color: var(--text);
+    font-size: 1.05rem;
+  }
+
+  .toolkit-head p,
+  .collections-head p {
+    max-width: 780px;
+  }
+
+  .active-collection {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin: 0 0 18px;
+    padding: 14px 16px;
+    border: 1px solid color-mix(in srgb, var(--primary) 40%, var(--border));
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--primary) 6%, var(--surface));
+  }
+
+  .active-collection[hidden] {
+    display: none !important;
+  }
+
+  .active-collection-label {
+    display: block;
+    margin-bottom: 2px;
+    color: var(--muted);
+    font-size: .72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+  }
+
+  .active-collection strong {
+    color: var(--text);
+  }
+
+  .collection-clear {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--primary-2);
+    font: inherit;
+    font-size: .85rem;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .toolkit-controls {
+    display: grid;
+    gap: 16px;
+    margin: 0 0 18px;
+  }
+
+  .cloud-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .filter-chip {
+    appearance: none;
+    padding: 8px 13px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--muted);
+    font: inherit;
+    font-size: .86rem;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .filter-chip:hover,
+  .filter-chip.is-active {
+    border-color: color-mix(in srgb, var(--primary) 62%, var(--border));
+    background: color-mix(in srgb, var(--primary) 9%, var(--surface));
+    color: var(--primary-2);
+  }
+
+  .toolkit-search-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 320px);
+    gap: 12px;
+  }
+
+  .search-field input,
+  .category-field select {
+    width: 100%;
+    min-height: 46px;
+    padding: 10px 13px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+  }
+
+  .result-count {
+    margin: 0 0 16px;
+    color: var(--muted);
+    font-size: .9rem;
+    font-weight: 700;
+  }
+
+  .toolkit-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .tool-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 500px;
+    padding: 26px;
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    background: var(--surface);
+    box-shadow: 0 12px 36px rgba(15, 23, 42, .05);
+  }
+
+  .tool-card[hidden] {
+    display: none;
+  }
+
+  .tool-card-top,
+  .tool-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .tool-number {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: .82rem;
+    color: var(--muted);
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 9px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-2);
+    color: var(--muted);
+    font-size: .74rem;
+    font-weight: 800;
+  }
+
+  .status-activa {
+    border-color: color-mix(in srgb, #16a34a 28%, var(--border));
+    color: #16a34a;
+  }
+
+  .status-mantenimiento {
+    border-color: color-mix(in srgb, #f59e0b 35%, var(--border));
+    color: #d97706;
+  }
+
+  .status-reemplazada {
+    border-color: color-mix(in srgb, var(--violet) 35%, var(--border));
+    color: var(--violet);
+  }
+
+  .status-archivada {
+    border-color: color-mix(in srgb, #ef4444 30%, var(--border));
+    color: #ef4444;
+  }
+
+  .cloud-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 18px;
+  }
+
+  .cloud-badge {
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: .74rem;
+    font-weight: 900;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+  }
+
+  .cloud-azure {
+    color: #0078d4;
+    border-color: color-mix(in srgb, #0078d4 35%, var(--border));
+  }
+
+  .cloud-aws {
+    color: #d97706;
+    border-color: color-mix(in srgb, #d97706 35%, var(--border));
+  }
+
+  .cloud-gcp {
+    color: #1a73e8;
+    border-color: color-mix(in srgb, #1a73e8 35%, var(--border));
+  }
+
+  .cloud-microsoft-365 {
+    color: #7c3aed;
+    border-color: color-mix(in srgb, #7c3aed 35%, var(--border));
+  }
+
+  .cloud-multicloud {
+    color: var(--primary-2);
+  }
+
+  .tool-category {
+    margin: 20px 0 5px;
+    color: var(--primary-2);
+    font-size: .82rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+  }
+
+  .tool-card h3 {
+    margin: 0 0 10px;
+    font-family: "STIX Two Text", Georgia, serif;
+    font-size: 1.62rem;
+    line-height: 1.15;
+  }
+
+  .tool-description {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .tool-meta {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin: 20px 0 0;
+  }
+
+  .tool-meta div {
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface-2);
+  }
+
+  .tool-meta dt {
+    margin-bottom: 3px;
+    color: var(--muted);
+    font-size: .7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+
+  .tool-meta dd {
+    margin: 0;
+    color: var(--text);
+    font-size: .8rem;
+    font-weight: 800;
+    line-height: 1.3;
+  }
+
+  .tool-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 18px 0;
+  }
+
+  .tool-tags span {
+    padding: 5px 9px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-2);
+    color: var(--muted);
+    font-size: .76rem;
+    font-weight: 700;
+  }
+
+  .patron-tip {
+    margin-bottom: 20px;
+    padding: 14px 15px;
+    border-left: 3px solid var(--primary);
+    border-radius: 0 12px 12px 0;
+    background: color-mix(in srgb, var(--primary) 6%, var(--surface));
+  }
+
+  .patron-tip strong {
+    font-size: .82rem;
+  }
+
+  .patron-tip p {
+    margin: 5px 0 0;
+    color: var(--muted);
+    font-size: .86rem;
+  }
+
+  .tool-footer {
+    margin-top: auto;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+  }
+
+  .tool-footer small {
+    color: var(--muted);
+  }
+
+  .architect-note {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 18px;
+    margin-top: 24px;
+    padding: 22px;
+    border: 1px solid color-mix(in srgb, var(--primary) 32%, var(--border));
+    border-radius: 18px;
+    background: color-mix(in srgb, var(--primary) 6%, var(--surface));
+  }
+
+  .architect-note p {
+    margin: 5px 0 0;
+    color: var(--muted);
+  }
+
+  .note-icon {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: var(--primary);
+    color: white;
+    font-weight: 900;
+  }
+
+  .collection-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .collection-card {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--surface);
+    box-shadow: 0 10px 30px rgba(15, 23, 42, .04);
+  }
+
+  .collection-label {
+    color: var(--primary-2);
+    font-size: .76rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .09em;
+  }
+
+  .collection-card h3 {
+    margin: 8px 0 10px;
+    font-family: "STIX Two Text", Georgia, serif;
+    font-size: 1.55rem;
+    line-height: 1.15;
+  }
+
+  .collection-card > p {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .collection-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 20px 0 22px;
+  }
+
+  .collection-tools span {
+    padding: 6px 9px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-2);
+    color: var(--muted);
+    font-size: .76rem;
+    font-weight: 700;
+  }
+
+  .collection-action {
+    align-self: flex-start;
+    margin-top: auto;
+    cursor: pointer;
+  }
+
+  .starter-callout {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    margin-top: 22px;
+    padding: 22px 24px;
+    border: 1px dashed var(--border);
+    border-radius: 18px;
+    background: color-mix(in srgb, var(--surface-2) 65%, transparent);
+  }
+
+  .starter-callout h3 {
+    margin: 4px 0 7px;
+    font-family: "STIX Two Text", Georgia, serif;
+    font-size: 1.35rem;
+  }
+
+  .starter-callout p {
+    max-width: 760px;
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .starter-link {
+    flex: 0 0 auto;
+  }
+
+  .empty-state {
+    margin: 18px 0;
+    padding: 24px;
+    border: 1px dashed var(--border);
+    border-radius: 16px;
+    text-align: center;
+  }
+
+  .empty-state p {
+    margin: 5px 0 0;
+    color: var(--muted);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
 
   @media (max-width: 900px) {
-    .tool-meta { grid-template-columns: 1fr; }
+    .tool-meta {
+      grid-template-columns: 1fr;
+    }
   }
 
   @media (max-width: 760px) {
-    .toolkit-grid { grid-template-columns: 1fr; }
-    .tool-card { min-height: 0; }
-    .toolkit-search-row { grid-template-columns: 1fr; }
-    .tool-footer { align-items: flex-start; flex-direction: column; gap: 8px; }
-    .architect-note { grid-template-columns: 1fr; }
-    .guide-callout { align-items: flex-start; flex-direction: column; }
+    .toolkit-grid,
+    .collection-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .tool-card {
+      min-height: 0;
+    }
+
+    .toolkit-search-row {
+      grid-template-columns: 1fr;
+    }
+
+    .tool-footer,
+    .starter-callout,
+    .active-collection {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .architect-note {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
