@@ -7,13 +7,13 @@ import { buildCollectionPageJsonLd } from '../../lib/seo';
 const entries = await getPublishedNews();
 const structuredData = buildCollectionPageJsonLd(
   'Novedades de Microsoft Cloud y Azure | PatronTech',
-  'Anuncios, noticias, cambios en certificaciones y eventos relevantes del ecosistema Microsoft y cloud, con fuentes verificables.',
+  'Anuncios, noticias, cambios en certificaciones y eventos relevantes de Microsoft, AWS, Google Cloud y el ecosistema cloud, con fuentes verificables.',
   '/novedades/'
 );
 ---
 <BaseLayout
   title="Novedades de Microsoft Cloud y Azure | PatronTech"
-  description="Anuncios, noticias, cambios en certificaciones y eventos relevantes del ecosistema Microsoft y cloud, con fuentes verificables."
+  description="Anuncios, noticias, cambios en certificaciones y eventos relevantes de Microsoft, AWS, Google Cloud y el ecosistema cloud, con fuentes verificables."
   canonicalPath="/novedades/"
   structuredData={structuredData}
 >
@@ -21,7 +21,7 @@ const structuredData = buildCollectionPageJsonLd(
     <div class="container">
       <span class="eyebrow">Centro de novedades</span>
       <h1>Novedades</h1>
-      <p>Anuncios, noticias, cambios en certificaciones y eventos relevantes del ecosistema Microsoft y cloud.</p>
+      <p>Anuncios, noticias, cambios en certificaciones y eventos relevantes de Microsoft, AWS, Google Cloud y el ecosistema cloud.</p>
     </div>
   </section>
 
