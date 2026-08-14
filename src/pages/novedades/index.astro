@@ -3,14 +3,59 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import NewsCard from '../../components/NewsCard.astro';
 import { getPublishedNews, contentUrl } from '../../lib/content';
 import { buildCollectionPageJsonLd } from '../../lib/seo';
+
 const entries = await getPublishedNews();
-const structuredData = buildCollectionPageJsonLd('Novedades de Microsoft Cloud y Azure | PatronTech', 'Anuncios, noticias, cambios en certificaciones y eventos relevantes del ecosistema Microsoft y cloud, con fuentes verificables.', '/novedades/');
+const structuredData = buildCollectionPageJsonLd(
+  'Novedades de Microsoft Cloud y Azure | PatronTech',
+  'Anuncios, noticias, cambios en certificaciones y eventos relevantes del ecosistema Microsoft y cloud, con fuentes verificables.',
+  '/novedades/'
+);
 ---
-<BaseLayout title="Novedades de Microsoft Cloud y Azure | PatronTech" description="Anuncios, noticias, cambios en certificaciones y eventos relevantes del ecosistema Microsoft y cloud, con fuentes verificables." canonicalPath="/novedades/" structuredData={structuredData}>
-  <section class="page-hero"><div class="container"><span class="eyebrow">Centro de novedades</span><h1>Novedades</h1><p>Anuncios, noticias, cambios en certificaciones y eventos relevantes del ecosistema Microsoft y cloud.</p></div></section>
-  <section class="section"><div class="container"><div class="news-shell" data-news-shell>
-    <div class="tabs"><button class="tab active" data-news-filter="Todos">Últimas</button><button class="tab" data-news-filter="Anuncios">Anuncios</button><button class="tab" data-news-filter="Noticias">Noticias</button><button class="tab" data-news-filter="Certificaciones">Certificaciones</button><button class="tab" data-news-filter="Eventos">Eventos</button></div>
-    <div class="news-list">{entries.length > 0 ? entries.map((entry) => <NewsCard title={entry.data.title} newsType={entry.data.newsType} publishedAt={entry.data.publishedAt} url={contentUrl(entry)} />) : <div class="page-empty">Aún no hay novedades publicadas. El esquema ya exige fecha del evento y al menos una fuente verificable.</div>}</div>
-  </div></div></section>
+<BaseLayout
+  title="Novedades de Microsoft Cloud y Azure | PatronTech"
+  description="Anuncios, noticias, cambios en certificaciones y eventos relevantes del ecosistema Microsoft y cloud, con fuentes verificables."
+  canonicalPath="/novedades/"
+  structuredData={structuredData}
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Centro de novedades</span>
+      <h1>Novedades</h1>
+      <p>Anuncios, noticias, cambios en certificaciones y eventos relevantes del ecosistema Microsoft y cloud.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="news-shell" data-news-shell>
+        <div class="tabs">
+          <button class="tab active" data-news-filter="Todos">Últimas</button>
+          <button class="tab" data-news-filter="Anuncios">Anuncios</button>
+          <button class="tab" data-news-filter="Noticias">Noticias</button>
+          <button class="tab" data-news-filter="Certificaciones">Certificaciones</button>
+          <button class="tab" data-news-filter="Eventos">Eventos</button>
+        </div>
+        <div class="news-list">
+          {entries.map((entry) => (
+            <NewsCard
+              title={entry.data.title}
+              newsType={entry.data.newsType}
+              publishedAt={entry.data.publishedAt}
+              url={contentUrl(entry)}
+            />
+          ))}
+          <div class="page-empty news-empty" data-news-empty hidden>
+            <p data-news-empty-copy>Aún no hay novedades publicadas.</p>
+            <a class="text-link" data-news-empty-link href="/novedades/">Abrir centro de novedades →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <script src="/scripts/filters.js" defer></script>
 </BaseLayout>
+
+<style>
+  .news-empty p { margin: 0 0 10px; }
+</style>

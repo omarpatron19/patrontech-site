@@ -16,11 +16,44 @@ const [articles, guides, news] = await Promise.all([
   getPublishedGuides(),
   getPublishedNews()
 ]);
+
 const editorial = [...articles, ...guides].sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
 const featured = editorial.find((entry) => entry.data.featured) ?? editorial[0];
 const recentGuides = guides.slice(0, 3);
-const authorSocialImage = await getImage({ src: authorImage, width: 600, format: 'webp' });
 
+/*
+ * La Home muestra máximo seis novedades, pero intenta conservar al menos
+ * una de cada newsType disponible. Así un filtro no queda vacío sólo porque
+ * sus noticias quedaron fuera de news.slice(0, 6).
+ */
+const homeNews = (() => {
+  const maxItems = 6;
+  const newsTypes = ['Anuncios', 'Noticias', 'Certificaciones', 'Eventos'];
+  const selected = [];
+  const selectedIds = new Set();
+
+  for (const type of newsTypes) {
+    const entry = news.find((item) => item.data.newsType === type);
+    if (entry) {
+      selected.push(entry);
+      selectedIds.add(entry.id);
+    }
+  }
+
+  for (const entry of news) {
+    if (selected.length >= maxItems) break;
+    if (!selectedIds.has(entry.id)) {
+      selected.push(entry);
+      selectedIds.add(entry.id);
+    }
+  }
+
+  return selected
+    .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
+    .slice(0, maxItems);
+})();
+
+const authorSocialImage = await getImage({ src: authorImage, width: 600, format: 'webp' });
 const structuredData = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -108,7 +141,18 @@ const structuredData = {
           <button class="tab" data-news-filter="Eventos">Eventos</button>
         </div>
         <div class="news-list">
-          {news.length > 0 ? news.slice(0, 6).map((entry) => <NewsCard title={entry.data.title} newsType={entry.data.newsType} publishedAt={entry.data.publishedAt} url={contentUrl(entry)} />) : <div class="page-empty">Las novedades verificadas aparecerán aquí cuando el flujo de investigación y fuentes esté habilitado.</div>}
+          {homeNews.map((entry) => (
+            <NewsCard
+              title={entry.data.title}
+              newsType={entry.data.newsType}
+              publishedAt={entry.data.publishedAt}
+              url={contentUrl(entry)}
+            />
+          ))}
+          <div class="page-empty news-empty" data-news-empty hidden>
+            <p data-news-empty-copy>Aún no hay novedades publicadas.</p>
+            <a class="text-link" data-news-empty-link href="/novedades/">Abrir centro de novedades →</a>
+          </div>
         </div>
       </div>
     </div>
@@ -143,6 +187,11 @@ const structuredData = {
       <div class="author-copy"><span class="eyebrow">Sobre el autor</span><h2>Irving Omar Patron Padron</h2><p>Arquitecto cloud y consultor tecnológico con amplia experiencia en Microsoft Azure, arquitectura empresarial, migraciones, seguridad, gobierno, automatización y optimización de costos.</p><p>A través de PatronTech comparte noticias, guías, análisis y recursos prácticos para ayudar a profesionales y organizaciones a tomar mejores decisiones técnicas y acelerar su adopción de la nube.</p><a class="primary-btn" href="/sobre-mi/">Conocer más</a></div>
     </div>
   </section>
+
   <Newsletter />
   <script src="/scripts/filters.js" defer></script>
 </BaseLayout>
+
+<style>
+  .news-empty p { margin: 0 0 10px; }
+</style>

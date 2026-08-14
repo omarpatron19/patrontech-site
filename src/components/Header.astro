@@ -4,6 +4,7 @@ const navigation = [
   { href: '/', label: 'Inicio' },
   { href: '/articulos/', label: 'Artículos' },
   { href: '/guias/', label: 'Guías' },
+  { href: '/certificaciones/', label: 'Certificaciones' },
   { href: '/novedades/', label: 'Novedades' },
   { href: '/recursos/', label: 'Recursos' },
   { href: '/categorias/', label: 'Categorías' },
@@ -40,3 +41,50 @@ const isActive = (href: string) => href === '/' ? path === '/' : path.startsWith
     </a>
   ))}
 </nav>
+
+<style>
+  /*
+   * Con ocho enlaces el header puede saturarse antes del breakpoint global de 980 px.
+   * Este ajuste sólo cambia la navegación; no colapsa prematuramente los grids del sitio.
+   */
+  @media (min-width: 981px) and (max-width: 1120px) {
+    .nav,
+    .header-actions .primary-btn {
+      display: none;
+    }
+
+    .mobile-toggle {
+      display: inline-grid;
+      place-items: center;
+    }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      inset: 76px 0 auto 0;
+      width: 100%;
+      max-width: 100vw;
+      max-height: calc(100dvh - 76px);
+      overflow-y: auto;
+      overflow-x: hidden;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 18px;
+      z-index: 39;
+    }
+
+    .mobile-menu.open {
+      display: block;
+    }
+
+    .mobile-menu a {
+      display: block;
+      padding: 14px;
+      border-radius: 10px;
+    }
+
+    .mobile-menu a:hover {
+      background: var(--surface-2);
+    }
+  }
+</style>

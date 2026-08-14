@@ -27,6 +27,7 @@
     buttons.forEach((button) => {
       if (button.dataset.filter === activeFilter) button.classList.add('active');
       else button.classList.remove('active');
+
       button.addEventListener('click', () => {
         buttons.forEach((item) => item.classList.remove('active'));
         button.classList.add('active');
@@ -48,11 +49,57 @@
   document.querySelectorAll('[data-news-shell]').forEach((shell) => {
     const buttons = [...shell.querySelectorAll('[data-news-filter]')];
     const items = [...shell.querySelectorAll('[data-news-type]')];
-    buttons.forEach((button) => button.addEventListener('click', () => {
-      buttons.forEach((item) => item.classList.remove('active'));
-      button.classList.add('active');
-      const filter = button.dataset.newsFilter || 'Todos';
-      items.forEach((item) => { item.hidden = filter !== 'Todos' && item.dataset.newsType !== filter; });
-    }));
+    const empty = shell.querySelector('[data-news-empty]');
+    const emptyCopy = shell.querySelector('[data-news-empty-copy]');
+    const emptyLink = shell.querySelector('[data-news-empty-link]');
+
+    function setEmptyState(filter, visible) {
+      if (!(empty instanceof HTMLElement)) return;
+
+      empty.hidden = visible > 0;
+      if (visible > 0) return;
+
+      if (emptyCopy instanceof HTMLElement) {
+        emptyCopy.textContent = filter === 'Certificaciones'
+          ? 'Aún no hay novedades de certificaciones en este bloque. Consulta el mapa vigente de Microsoft Credentials.'
+          : filter === 'Todos'
+            ? 'Aún no hay novedades publicadas.'
+            : `Aún no hay novedades publicadas de ${filter.toLowerCase()}.`;
+      }
+
+      if (emptyLink instanceof HTMLAnchorElement) {
+        if (filter === 'Certificaciones') {
+          emptyLink.href = '/certificaciones/';
+          emptyLink.textContent = 'Ver mapa de certificaciones →';
+        } else {
+          emptyLink.href = '/novedades/';
+          emptyLink.textContent = 'Abrir centro de novedades →';
+        }
+      }
+    }
+
+    function apply(filter = 'Todos') {
+      let visible = 0;
+
+      items.forEach((item) => {
+        if (!(item instanceof HTMLElement)) return;
+        const show = filter === 'Todos' || item.dataset.newsType === filter;
+        item.hidden = !show;
+        if (show) visible += 1;
+      });
+
+      setEmptyState(filter, visible);
+    }
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        buttons.forEach((item) => item.classList.remove('active'));
+        button.classList.add('active');
+        apply(button.dataset.newsFilter || 'Todos');
+      });
+    });
+
+    const active = buttons.find((button) => button.classList.contains('active'));
+    apply(active?.dataset.newsFilter || 'Todos');
   });
 })();

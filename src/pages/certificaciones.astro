@@ -1,0 +1,634 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { buildCollectionPageJsonLd } from '../lib/seo';
+
+const certifications = [
+  // Azure
+  { code:'AZ-900', name:'Microsoft Certified: Azure Fundamentals', area:'Azure', level:'Fundamental', status:'Vigente', role:'Fundamentos de cloud', focus:'Conceptos de nube, arquitectura de Azure, servicios principales, administración y gobierno.', url:'https://learn.microsoft.com/en-us/credentials/certifications/azure-fundamentals/' },
+  { code:'AZ-104', name:'Microsoft Certified: Azure Administrator Associate', area:'Azure', level:'Associate', status:'Vigente', role:'Azure Administrator', focus:'Identidad, gobierno, storage, compute, networking y monitorización de Azure.', url:'https://learn.microsoft.com/en-us/credentials/certifications/azure-administrator/' },
+  { code:'AZ-700', name:'Microsoft Certified: Azure Network Engineer Associate', area:'Azure', level:'Associate', status:'Vigente', role:'Network Engineer', focus:'Core networking, conectividad híbrida, application delivery, Private Link y seguridad de red.', url:'https://learn.microsoft.com/en-us/credentials/certifications/azure-network-engineer-associate/' },
+  { code:'AZ-305', name:'Microsoft Certified: Azure Solutions Architect Expert', area:'Azure', level:'Expert', status:'Vigente', role:'Solution Architect', focus:'Diseño de identidad, gobierno, almacenamiento, continuidad de negocio e infraestructura.', url:'https://learn.microsoft.com/en-us/credentials/certifications/azure-solutions-architect/', note:'Requiere Azure Administrator Associate además de aprobar AZ-305.' },
+  { code:'AZ-400', name:'Microsoft Certified: DevOps Engineer Expert', area:'Azure', level:'Expert', status:'Vigente', role:'DevOps Engineer', focus:'Procesos DevOps, source control, CI/CD, seguridad, observabilidad y automatización.', url:'https://learn.microsoft.com/en-us/credentials/certifications/devops-engineer/' },
+  { code:'AZ-140', name:'Microsoft Certified: Azure Virtual Desktop Specialty', area:'Azure', level:'Specialty', status:'Vigente', role:'AVD Administrator', focus:'Planeación, despliegue, identidad, seguridad, operación y monitoreo de Azure Virtual Desktop.', url:'https://learn.microsoft.com/en-us/credentials/certifications/azure-virtual-desktop-specialty/' },
+  { code:'AZ-120', name:'Microsoft Certified: Azure for SAP Workloads Specialty', area:'Azure', level:'Specialty', status:'Vigente', role:'SAP on Azure Architect / Engineer', focus:'Migración, arquitectura, alta disponibilidad, recuperación y operación de SAP sobre Azure.', url:'https://learn.microsoft.com/en-us/credentials/certifications/azure-for-sap-workloads-specialty/' },
+
+  // Security
+  { code:'SC-900', name:'Microsoft Certified: Security, Compliance, and Identity Fundamentals', area:'Security', level:'Fundamental', status:'Vigente', role:'Fundamentos de seguridad', focus:'Microsoft Entra, seguridad, cumplimiento, privacidad y conceptos de Zero Trust.', url:'https://learn.microsoft.com/en-us/credentials/certifications/security-compliance-and-identity-fundamentals/' },
+  { code:'SC-200', name:'Microsoft Certified: Security Operations Analyst Associate', area:'Security', level:'Associate', status:'Vigente', role:'Security Operations Analyst', focus:'Microsoft Sentinel, Defender XDR, investigación, detección y respuesta a amenazas.', url:'https://learn.microsoft.com/en-us/credentials/certifications/security-operations-analyst/' },
+  { code:'SC-300', name:'Microsoft Certified: Identity and Access Administrator Associate', area:'Security', level:'Associate', status:'Vigente', role:'Identity and Access Administrator', focus:'Microsoft Entra ID, autenticación, autorización, Conditional Access y gobierno de identidad.', url:'https://learn.microsoft.com/en-us/credentials/certifications/identity-and-access-administrator/' },
+  { code:'SC-401', name:'Microsoft Certified: Information Security Administrator Associate', area:'Security', level:'Associate', status:'Vigente', role:'Information Security Administrator', focus:'Microsoft Purview, Information Protection, DLP, retención y administración de riesgos.', url:'https://learn.microsoft.com/en-us/credentials/certifications/information-security-administrator/' },
+  { code:'SC-500', name:'Microsoft Certified: Cloud and AI Security Engineer Associate', area:'Security', level:'Associate', status:'Vigente', role:'Cloud and AI Security Engineer', focus:'Controles de seguridad end-to-end para Azure, entornos híbridos y workloads habilitados con IA.', url:'https://learn.microsoft.com/en-us/credentials/certifications/cloud-and-ai-security-engineer-associate/' },
+  { code:'SC-100', name:'Microsoft Certified: Cybersecurity Architect Expert', area:'Security', level:'Expert', status:'Vigente', role:'Cybersecurity Architect', focus:'Arquitectura Zero Trust, GRC, SecOps, identidad, infraestructura, aplicaciones y datos.', url:'https://learn.microsoft.com/en-us/credentials/certifications/cybersecurity-architect-expert/', note:'Microsoft sigue exigiendo SC-100 y al menos una certificación prerequisite aceptada en su página oficial.' },
+  { code:'AZ-500', name:'Microsoft Certified: Azure Security Engineer Associate', area:'Security', level:'Associate', status:'Próximo retiro', retirement:'31 ago 2026', role:'Azure Security Engineer', focus:'Seguridad de identidad, red, compute, storage y Defender for Cloud.', url:'https://learn.microsoft.com/en-us/credentials/certifications/azure-security-engineer/', note:'La certificación, el examen y la renovación se retiran el 31 de agosto de 2026.' },
+
+  // AI & Agents
+  { code:'AI-901', name:'Microsoft Certified: Azure AI Fundamentals', area:'AI & Agents', level:'Fundamental', status:'Vigente', role:'Fundamentos de AI', focus:'Conceptos de AI, IA generativa, agentes y capacidades de Microsoft Foundry en Azure.', url:'https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-fundamentals/' },
+  { code:'AI-103', name:'Microsoft Certified: Azure AI Apps and Agents Developer Associate', area:'AI & Agents', level:'Associate', status:'Vigente', role:'AI Engineer / Developer', focus:'Diseño, desarrollo y despliegue de aplicaciones y agentes de IA usando Python y Microsoft Foundry.', url:'https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-apps-and-agents-developer-associate/' },
+  { code:'AI-200', name:'Microsoft Certified: Azure AI Cloud Developer Associate', area:'AI & Agents', level:'Associate', status:'Vigente', role:'Azure AI Cloud Developer', focus:'Back-end, contenedores, datos, integración de servicios, seguridad, monitoreo y ciclo de vida de soluciones AI.', url:'https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-cloud-developer-associate/' },
+  { code:'AI-300', name:'Microsoft Certified: Machine Learning Operations Engineer Associate', area:'AI & Agents', level:'Associate', status:'Vigente', role:'MLOps / GenAIOps Engineer', focus:'MLOps, GenAIOps, Azure Machine Learning, Microsoft Foundry, GitHub Actions e Infrastructure as Code.', url:'https://learn.microsoft.com/en-us/credentials/certifications/operationalizing-machine-learning-and-generative-ai-solutions/' },
+  { code:'AB-620', name:'Microsoft Certified: AI Agent Builder Associate', area:'AI & Agents', level:'Associate', status:'Vigente', role:'Agent Builder / Developer', focus:'Agentes empresariales con Copilot Studio, Power Platform, APIs, MCP, RAG e integraciones.', url:'https://learn.microsoft.com/en-us/credentials/certifications/ai-agent-builder-associate/' },
+  { code:'AI-500', name:'Microsoft Certified: Multi-Agent AI Solutions Expert', area:'AI & Agents', level:'Expert', status:'Beta', role:'AI Engineer / Solution Architect', focus:'Arquitectura, desarrollo, evaluación, optimización, seguridad y despliegue de soluciones multi-agente.', url:'https://learn.microsoft.com/en-us/credentials/certifications/multi-agent-ai-solutions-expert/', note:'En beta. Requiere Azure AI Apps and Agents Developer Associate.' },
+  { code:'AB-100', name:'Microsoft Certified: Agentic AI Business Solutions Architect', area:'AI & Agents', level:'Expert', status:'Vigente', role:'Solution Architect', focus:'Arquitectura de soluciones empresariales AI-first y agentic-first sobre el stack de Microsoft.', url:'https://learn.microsoft.com/en-us/credentials/certifications/agentic-ai-business-solutions-architect/', note:'Además de AB-100, Microsoft requiere una certificación Associate aceptada como prerequisite.' },
+  { code:'AB-730', name:'Microsoft Certified: AI Business Professional', area:'AI & Agents', level:'Fundamental', status:'Vigente', role:'Business User', focus:'Uso de IA generativa, Microsoft 365 Copilot y agentes para productividad y decisiones de negocio.', url:'https://learn.microsoft.com/en-us/credentials/certifications/ai-business-professional/' },
+  { code:'AB-731', name:'Microsoft Certified: AI Transformation Leader', area:'AI & Agents', level:'Fundamental', status:'Vigente', role:'Business Leader', focus:'Identificación de valor, estrategia de adopción, Responsible AI y transformación con Copilot y Foundry.', url:'https://learn.microsoft.com/en-us/credentials/certifications/ai-transformation-leader/' },
+
+  // Data & Fabric
+  { code:'DP-900', name:'Microsoft Certified: Azure Data Fundamentals', area:'Data & Fabric', level:'Fundamental', status:'Vigente', role:'Fundamentos de datos', focus:'Datos relacionales, no relacionales, analítica y servicios de datos de Azure.', url:'https://learn.microsoft.com/en-us/credentials/certifications/azure-data-fundamentals/' },
+  { code:'DP-300', name:'Microsoft Certified: Azure Database Administrator Associate', area:'Data & Fabric', level:'Associate', status:'Vigente', role:'Database Administrator', focus:'Azure SQL, SQL Server híbrido, seguridad, rendimiento, automatización y HA/DR.', url:'https://learn.microsoft.com/en-us/credentials/certifications/azure-database-administrator-associate/' },
+  { code:'DP-420', name:'Microsoft Certified: Azure Cosmos DB Developer Specialty', area:'Data & Fabric', level:'Specialty', status:'Vigente', role:'Developer', focus:'Diseño, desarrollo, indexación, seguridad y operación de soluciones con Cosmos DB for NoSQL.', url:'https://learn.microsoft.com/en-us/credentials/certifications/azure-cosmos-db-developer-specialty/' },
+  { code:'DP-600', name:'Microsoft Certified: Fabric Analytics Engineer Associate', area:'Data & Fabric', level:'Associate', status:'Vigente', role:'Analytics Engineer', focus:'Soluciones analíticas en Microsoft Fabric, preparación de datos y modelos semánticos.', url:'https://learn.microsoft.com/en-us/credentials/certifications/fabric-analytics-engineer-associate/' },
+  { code:'DP-700', name:'Microsoft Certified: Fabric Data Engineer Associate', area:'Data & Fabric', level:'Associate', status:'Vigente', role:'Data Engineer', focus:'Ingesta, transformación, seguridad, administración y optimización de soluciones de datos en Fabric.', url:'https://learn.microsoft.com/en-us/credentials/certifications/fabric-data-engineer-associate/' },
+  { code:'DP-750', name:'Microsoft Certified: Azure Databricks Data Engineer Associate', area:'Data & Fabric', level:'Associate', status:'Vigente', role:'Data Engineer', focus:'Azure Databricks, Unity Catalog, procesamiento de datos, pipelines y operación.', url:'https://learn.microsoft.com/en-us/credentials/certifications/implementing-data-engineering-solutions-using-azure-databricks/' },
+  { code:'DP-800', name:'Microsoft Certified: SQL AI Developer Associate', area:'Data & Fabric', level:'Associate', status:'Vigente', role:'SQL / AI Developer', focus:'Soluciones SQL modernas con características de AI, vectores, modelos, seguridad, optimización y CI/CD.', url:'https://learn.microsoft.com/en-us/credentials/certifications/developing-ai-enabled-database-solutions/' },
+
+  // Microsoft 365
+  { code:'AB-900', name:'Microsoft 365 Certified: Copilot and Agent Administration Fundamentals', area:'Microsoft 365', level:'Fundamental', status:'Vigente', role:'Microsoft 365 / Copilot Administrator', focus:'Servicios Microsoft 365, seguridad, gobierno de datos, Copilot y administración de agentes.', url:'https://learn.microsoft.com/en-us/credentials/certifications/copilot-and-agent-administration-fundamentals/' },
+  { code:'MD-102', name:'Microsoft 365 Certified: Endpoint Administrator Associate', area:'Microsoft 365', level:'Associate', status:'Vigente', role:'Endpoint Administrator', focus:'Microsoft Intune, Autopilot, Entra ID, Defender for Endpoint, Windows 365 y administración moderna.', url:'https://learn.microsoft.com/en-us/credentials/certifications/modern-desktop/' },
+  { code:'MS-700', name:'Microsoft 365 Certified: Teams Administrator Associate', area:'Microsoft 365', level:'Associate', status:'Vigente', role:'Teams Administrator', focus:'Microsoft Teams, reuniones, calling, seguridad, governance y troubleshooting.', url:'https://learn.microsoft.com/en-us/credentials/certifications/m365-teams-administrator-associate/' },
+  { code:'MS-721', name:'Microsoft 365 Certified: Collaboration Communications Systems Engineer Associate', area:'Microsoft 365', level:'Associate', status:'Vigente', role:'Collaboration Communications Engineer', focus:'Teams Phone, meetings, webinars, Teams Premium, Rooms, dispositivos y Copilot.', url:'https://learn.microsoft.com/en-us/credentials/certifications/m365-collaboration-communications-systems-engineer/' },
+  { code:'AB-650', name:'Microsoft 365 Certified: AI Services Administrator Associate', area:'Microsoft 365', level:'Associate', status:'Beta', role:'Microsoft 365 and AI Services Administrator', focus:'Administración, gobierno y seguridad de tenants, workloads, Copilot, agentes y servicios de IA.', url:'https://learn.microsoft.com/en-us/credentials/certifications/ai-services-administrator-associate/' },
+  { code:'MS-102', name:'Microsoft 365 Certified: Administrator Expert', area:'Microsoft 365', level:'Expert', status:'Próximo retiro', retirement:'31 oct 2026', role:'Microsoft 365 Administrator', focus:'Administración tenant-level, Entra ID, Defender XDR y Microsoft Purview.', url:'https://learn.microsoft.com/en-us/credentials/certifications/m365-administrator-expert/', note:'Microsoft anunció su retiro para el 31 de octubre de 2026.' }
+];
+
+const areas = ['Todos', 'Azure', 'Security', 'AI & Agents', 'Data & Fabric', 'Microsoft 365'];
+
+const structuredData = buildCollectionPageJsonLd(
+  'Mapa de certificaciones Microsoft 2026 | PatronTech',
+  'Mapa actualizado de certificaciones Microsoft para Azure, Security, AI, Data, Fabric y Microsoft 365, con rutas, estados y documentación oficial.',
+  '/certificaciones/'
+);
+
+const activeCount = certifications.filter((item) => item.status === 'Vigente').length;
+const betaCount = certifications.filter((item) => item.status === 'Beta').length;
+const retiringCount = certifications.filter((item) => item.status === 'Próximo retiro').length;
+---
+
+<BaseLayout
+  title="Mapa de certificaciones Microsoft 2026 | PatronTech"
+  description="Mapa actualizado de certificaciones Microsoft para Azure, Security, AI, Data, Fabric y Microsoft 365, con rutas, niveles, estados y documentación oficial."
+  canonicalPath="/certificaciones/"
+  structuredData={structuredData}
+>
+  <section class="page-hero certification-hero">
+    <div class="container">
+      <span class="eyebrow">Microsoft Credentials · revisado 14 agosto 2026</span>
+      <h1>Mapa de certificaciones Microsoft</h1>
+      <p>
+        Una vista práctica de las principales rutas técnicas de Microsoft para Azure,
+        seguridad, AI y agentes, datos/Fabric y Microsoft 365. La página distingue
+        credenciales vigentes, certificaciones en beta y rutas próximas a retirarse.
+      </p>
+
+      <div class="cert-summary" aria-label="Resumen de credenciales">
+        <div><strong>{certifications.length}</strong><span>credenciales mapeadas</span></div>
+        <div><strong>{activeCount}</strong><span>vigentes</span></div>
+        <div><strong>{betaCount}</strong><span>en beta</span></div>
+        <div><strong>{retiringCount}</strong><span>próximas a retiro</span></div>
+      </div>
+
+      <div class="scope-note">
+        <strong>Alcance de PatronTech:</strong> este mapa se concentra en las rutas técnicas
+        relacionadas con cloud, infraestructura, seguridad, AI, datos y Microsoft 365.
+        Microsoft también mantiene credenciales de Dynamics 365, Power Platform y GitHub.
+      </div>
+
+      <p class="cert-disclaimer">
+        Antes de comprar o programar un examen, verifica siempre los requisitos,
+        idiomas, estado beta y fechas de retiro directamente en Microsoft Learn.
+      </p>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">Rutas sugeridas</span>
+          <h2>¿Por dónde empezar?</h2>
+          <p>Son rutas editoriales de PatronTech, no prerequisites oficiales salvo donde se indique.</p>
+        </div>
+      </div>
+
+      <div class="path-grid">
+        <article class="path-card">
+          <h3>☁ Infraestructura y arquitectura Azure</h3>
+          <div class="path-flow"><span>AZ-900</span><b>→</b><span>AZ-104</span><b>→</b><span>AZ-305</span></div>
+          <p>Base sólida para administración y arquitectura. AZ-700 complementa la ruta cuando networking es parte central del rol.</p>
+        </article>
+
+        <article class="path-card">
+          <h3>⌁ Networking Azure</h3>
+          <div class="path-flow"><span>AZ-900</span><b>→</b><span>AZ-104</span><b>→</b><span>AZ-700</span></div>
+          <p>Para VNets, DNS, Private Link, VPN, ExpressRoute, Firewall y application delivery.</p>
+        </article>
+
+        <article class="path-card">
+          <h3>◇ Seguridad cloud</h3>
+          <div class="path-flow"><span>SC-900</span><b>→</b><span>SC-500</span><b>→</b><span>SC-100</span></div>
+          <p>SC-500 es la nueva credencial de seguridad cloud y AI. Revisa los prerequisites oficiales vigentes de SC-100.</p>
+        </article>
+
+        <article class="path-card">
+          <h3>✦ Desarrollo Azure AI</h3>
+          <div class="path-flow"><span>AI-901</span><b>→</b><span>AI-103 / AI-200</span></div>
+          <p>AI-103 se enfoca en apps y agentes; AI-200 amplía hacia servicios back-end, integración, seguridad y operación cloud.</p>
+        </article>
+
+        <article class="path-card">
+          <h3>◎ Agentes y arquitectura AI</h3>
+          <div class="path-flow"><span>AB-620</span><b>→</b><span>AB-100</span></div>
+          <p>Para builders y arquitectos de soluciones agentic. AB-100 exige además una credencial Associate aceptada por Microsoft.</p>
+        </article>
+
+        <article class="path-card">
+          <h3>▤ Data y Fabric</h3>
+          <div class="path-flow"><span>DP-900</span><b>→</b><span>DP-300 / DP-600 / DP-700 / DP-750</span></div>
+          <p>La especialización depende de si trabajas con SQL, analytics en Fabric, data engineering o Databricks.</p>
+        </article>
+
+        <article class="path-card">
+          <h3>▦ Microsoft 365 moderno</h3>
+          <div class="path-flow"><span>AB-900</span><b>→</b><span>MD-102 / MS-700</span><b>→</b><span>AB-650</span></div>
+          <p>AB-650 está en beta y refleja la transición hacia administración conjunta de Microsoft 365, Copilot y agentes.</p>
+        </article>
+
+        <article class="path-card">
+          <h3>◫ Windows Server híbrido</h3>
+          <div class="path-flow"><span>AZ-800 + AZ-801</span><b>→</b><span>AZ-802 (beta)</span></div>
+          <p>AZ-800 y AZ-801 se retiran el 30 de septiembre de 2026; AZ-802 queda como la nueva ruta de Windows Server Administrator Associate.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" data-cert-shell>
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">Explorar credenciales</span>
+          <h2>Certificaciones por especialidad</h2>
+          <p>Filtra por familia tecnológica o busca por examen, perfil o tecnología.</p>
+        </div>
+      </div>
+
+      <div class="cert-toolbar">
+        <div class="filter-row" role="group" aria-label="Filtrar certificaciones">
+          {areas.map((area) => (
+            <button
+              type="button"
+              class:list={{ 'filter-btn': true, active: area === 'Todos' }}
+              data-cert-filter={area}
+            >
+              {area}
+            </button>
+          ))}
+        </div>
+
+        <input
+          class="search-input"
+          type="search"
+          placeholder="Buscar AZ-104, Copilot, networking, Fabric..."
+          aria-label="Buscar certificaciones"
+          data-cert-search
+        />
+      </div>
+
+      <div class="cert-grid">
+        {certifications.map((cert) => (
+          <article
+            class="cert-card"
+            data-cert-card
+            data-area={cert.area}
+            data-search={`${cert.code} ${cert.name} ${cert.area} ${cert.role} ${cert.focus}`.toLowerCase()}
+          >
+            <div class="cert-topline">
+              <span class="exam-code">{cert.code}</span>
+              <span
+                class:list={{
+                  'status-chip': true,
+                  active: cert.status === 'Vigente',
+                  beta: cert.status === 'Beta',
+                  retiring: cert.status === 'Próximo retiro'
+                }}
+              >
+                {cert.status}
+              </span>
+            </div>
+
+            <span class="cert-area">{cert.area} · {cert.level}</span>
+            <h3>{cert.name}</h3>
+            <p>{cert.focus}</p>
+
+            <dl class="cert-facts">
+              <div><dt>Perfil</dt><dd>{cert.role}</dd></div>
+              {cert.retirement && <div><dt>Retiro</dt><dd>{cert.retirement}</dd></div>}
+            </dl>
+
+            {cert.note && <div class="cert-note">{cert.note}</div>}
+
+            <a class="cert-link" href={cert.url} target="_blank" rel="noopener noreferrer">
+              Ver certificación oficial ↗
+            </a>
+          </article>
+        ))}
+      </div>
+
+      <div class="empty-state" data-cert-empty hidden>
+        No encontramos certificaciones con esos criterios.
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container transition-layout">
+      <div>
+        <span class="eyebrow">Cambios importantes de 2026</span>
+        <h2>No uses un mapa viejo</h2>
+        <p>Varias rutas cambiaron de examen, fueron reemplazadas o ya tienen fecha oficial de retiro.</p>
+      </div>
+
+      <div class="transition-list">
+        <article><strong>AZ-500</strong><span>Azure Security Engineer Associate</span><em>Retiro: 31 ago 2026</em></article>
+        <article><strong>AZ-800 / 801</strong><span>Windows Server Hybrid</span><em>Exámenes se retiran: 30 sep 2026</em></article>
+        <article><strong>AZ-802</strong><span>Windows Server Administrator Associate</span><em>Nueva ruta en beta</em></article>
+        <article><strong>AI-900</strong><span>Examen anterior de Azure AI Fundamentals</span><em>Retirado: 30 jun 2026 · ahora AI-901</em></article>
+        <article><strong>AZ-204</strong><span>Azure Developer Associate</span><em>Certificación retirada: 31 jul 2026</em></article>
+        <article><strong>MS-900</strong><span>Microsoft 365 Fundamentals</span><em>Retirada: 31 mar 2026</em></article>
+        <article><strong>MS-102</strong><span>Microsoft 365 Administrator Expert</span><em>Retiro: 31 oct 2026</em></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container official-sources">
+      <span class="eyebrow">Fuente de verdad</span>
+      <h2>Documentación oficial de Microsoft</h2>
+      <p>
+        El mapa fue contrastado con Microsoft Learn y Microsoft Credentials el
+        <strong>14 de agosto de 2026</strong>. Para cualquier decisión de examen,
+        prevalece siempre la documentación oficial.
+      </p>
+
+      <div class="source-grid">
+        <a href="https://learn.microsoft.com/en-us/credentials/" target="_blank" rel="noopener noreferrer">
+          <strong>Microsoft Credentials</strong>
+          <span>Catálogo y poster oficial de Certifications y Applied Skills.</span>
+        </a>
+        <a href="https://learn.microsoft.com/en-us/credentials/support/credential-retirement" target="_blank" rel="noopener noreferrer">
+          <strong>Credential retirement</strong>
+          <span>Fechas de retiro programadas y credenciales recientemente retiradas.</span>
+        </a>
+        <a href="https://learn.microsoft.com/en-us/credentials/support/credential-expiration-policy" target="_blank" rel="noopener noreferrer">
+          <strong>Expiration policy</strong>
+          <span>Política de expiración y renovación de certificaciones.</span>
+        </a>
+        <a href="https://learn.microsoft.com/en-us/credentials/certifications/practice-assessments-for-microsoft-certifications" target="_blank" rel="noopener noreferrer">
+          <strong>Practice Assessments</strong>
+          <span>Listado oficial de evaluaciones prácticas disponibles por examen.</span>
+        </a>
+        <a href="https://learn.microsoft.com/en-us/credentials/certifications/windows-server-administrator-associate/" target="_blank" rel="noopener noreferrer">
+          <strong>Transición Windows Server</strong>
+          <span>AZ-802 beta y retiro de AZ-800/AZ-801 el 30 de septiembre de 2026.</span>
+        </a>
+        <a href="https://learn.microsoft.com/en-us/credentials/certifications/cloud-and-ai-security-engineer-associate/" target="_blank" rel="noopener noreferrer">
+          <strong>Cloud and AI Security Engineer</strong>
+          <span>Referencia oficial de la nueva certificación SC-500.</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const shell = document.querySelector('[data-cert-shell]');
+
+    if (shell) {
+      const buttons = Array.from(shell.querySelectorAll('[data-cert-filter]'));
+      const cards = Array.from(shell.querySelectorAll('[data-cert-card]'));
+      const search = shell.querySelector('[data-cert-search]');
+      const empty = shell.querySelector('[data-cert-empty]');
+      let activeArea = 'Todos';
+
+      const applyFilters = () => {
+        const term = search instanceof HTMLInputElement
+          ? search.value.trim().toLowerCase()
+          : '';
+
+        let visible = 0;
+
+        cards.forEach((card) => {
+          if (!(card instanceof HTMLElement)) return;
+
+          const matchesArea = activeArea === 'Todos' || card.dataset.area === activeArea;
+          const matchesSearch = !term || (card.dataset.search ?? '').includes(term);
+          const show = matchesArea && matchesSearch;
+
+          card.hidden = !show;
+          if (show) visible += 1;
+        });
+
+        if (empty instanceof HTMLElement) {
+          empty.hidden = visible !== 0;
+        }
+      };
+
+      buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+          activeArea = button.getAttribute('data-cert-filter') ?? 'Todos';
+          buttons.forEach((item) => item.classList.toggle('active', item === button));
+          applyFilters();
+        });
+      });
+
+      search?.addEventListener('input', applyFilters);
+      applyFilters();
+    }
+  </script>
+</BaseLayout>
+
+<style>
+  .cert-summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    max-width: 900px;
+    margin-top: 28px;
+  }
+
+  .cert-summary div,
+  .path-card,
+  .cert-card,
+  .source-grid a,
+  .transition-list article {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+  }
+
+  .cert-summary div { padding: 18px; }
+
+  .cert-summary strong {
+    display: block;
+    font: 700 2rem/1 "STIX Two Text", Georgia, serif;
+    color: var(--primary-2);
+  }
+
+  .cert-summary span {
+    display: block;
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: .9rem;
+  }
+
+  .scope-note,
+  .cert-disclaimer {
+    max-width: 900px;
+    margin-top: 22px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: var(--surface-2);
+    color: var(--muted);
+    font-size: .92rem;
+  }
+
+  .cert-disclaimer {
+    border-left: 3px solid var(--primary);
+    border-radius: 0 12px 12px 0;
+  }
+
+  .path-grid,
+  .cert-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .path-card,
+  .cert-card {
+    padding: 22px;
+  }
+
+  .path-card h3,
+  .cert-card h3 {
+    font-family: "STIX Two Text", Georgia, serif;
+    line-height: 1.2;
+  }
+
+  .path-card p,
+  .cert-card > p,
+  .official-sources > p,
+  .transition-layout p {
+    color: var(--muted);
+  }
+
+  .path-flow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+
+  .path-flow span {
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 700;
+    font-size: .82rem;
+    padding: 7px 9px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--surface-2);
+  }
+
+  .path-flow b { color: var(--primary-2); }
+
+  .cert-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 26px;
+  }
+
+  .cert-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .cert-card[hidden] { display: none !important; }
+
+  .cert-topline {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .exam-code {
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 700;
+    color: var(--primary-2);
+    padding: 6px 9px;
+    border-radius: 9px;
+    background: var(--surface-2);
+  }
+
+  .status-chip {
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: .72rem;
+    font-weight: 800;
+    border: 1px solid var(--border);
+  }
+
+  .status-chip.active { color: #22c55e; }
+  .status-chip.beta { color: var(--violet); }
+  .status-chip.retiring { color: #f59e0b; }
+
+  .cert-area {
+    display: block;
+    color: var(--muted);
+    font-size: .78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-top: 18px;
+  }
+
+  .cert-card h3 {
+    font-size: 1.35rem;
+    margin: 8px 0 10px;
+  }
+
+  .cert-card > p { flex: 1; }
+
+  .cert-facts {
+    display: grid;
+    gap: 8px;
+    margin: 0 0 16px;
+  }
+
+  .cert-facts div {
+    display: grid;
+    grid-template-columns: 74px 1fr;
+    gap: 10px;
+    font-size: .87rem;
+  }
+
+  .cert-facts dt {
+    font-weight: 800;
+    color: var(--muted);
+  }
+
+  .cert-facts dd { margin: 0; }
+
+  .cert-note {
+    margin-bottom: 16px;
+    padding: 12px;
+    border-radius: 10px;
+    background: var(--surface-2);
+    color: var(--muted);
+    font-size: .84rem;
+  }
+
+  .cert-link {
+    margin-top: auto;
+    color: var(--primary-2);
+    font-weight: 800;
+  }
+
+  .transition-layout {
+    display: grid;
+    grid-template-columns: .8fr 1.2fr;
+    gap: 42px;
+  }
+
+  .transition-layout h2,
+  .official-sources h2 {
+    font-family: "STIX Two Text", Georgia, serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    margin: 8px 0 12px;
+  }
+
+  .transition-list {
+    display: grid;
+    gap: 10px;
+  }
+
+  .transition-list article {
+    display: grid;
+    grid-template-columns: 110px 1fr auto;
+    gap: 14px;
+    align-items: center;
+    padding: 16px;
+  }
+
+  .transition-list strong {
+    font-family: "IBM Plex Mono", monospace;
+    color: var(--primary-2);
+  }
+
+  .transition-list em {
+    font-style: normal;
+    color: #f59e0b;
+    font-size: .84rem;
+    text-align: right;
+  }
+
+  .source-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 24px;
+  }
+
+  .source-grid a {
+    display: block;
+    padding: 18px;
+  }
+
+  .source-grid strong,
+  .source-grid span {
+    display: block;
+  }
+
+  .source-grid span {
+    color: var(--muted);
+    font-size: .9rem;
+    margin-top: 5px;
+  }
+
+  @media (max-width: 980px) {
+    .cert-summary,
+    .path-grid,
+    .cert-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .transition-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .cert-toolbar {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .search-input { width: 100%; }
+  }
+
+  @media (max-width: 680px) {
+    .cert-summary,
+    .path-grid,
+    .cert-grid,
+    .source-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .transition-list article {
+      grid-template-columns: 1fr;
+      gap: 5px;
+    }
+
+    .transition-list em {
+      text-align: left;
+    }
+  }
+</style>
