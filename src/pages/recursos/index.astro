@@ -340,7 +340,7 @@ const toolkitCollections = collectionDefinitions.map((collection) => ({
   const clearCollectionButton = document.querySelector('#clear-collection');
 
   let activeCloud = 'all';
-  let activeCollectionSlugs = null;
+  let activeCollectionSlugs: Set<string> | null = null;
 
   function resetCloudFilter() {
     activeCloud = 'all';
