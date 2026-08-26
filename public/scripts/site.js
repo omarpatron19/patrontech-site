@@ -37,14 +37,5 @@
     document.querySelector('[data-mobile-toggle]')?.setAttribute('aria-expanded', 'false');
   });
 
-  document.querySelectorAll('[data-newsletter-form]').forEach((form) => {
-    form.addEventListener('submit', (event) => {
-      event.preventDefault();
-      const input = form.querySelector('input[type="email"]');
-      if (input instanceof HTMLInputElement && input.value) {
-        window.alert('Gracias. La suscripción quedará habilitada en una próxima fase.');
-        input.value = '';
-      }
-    });
-  });
+ 
 })();

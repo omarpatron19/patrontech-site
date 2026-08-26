@@ -4,7 +4,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
 import NewsCard from '../components/NewsCard.astro';
 import CategoryCard from '../components/CategoryCard.astro';
-import Newsletter from '../components/Newsletter.astro';
 import { categories } from '../data/categories';
 import { resources } from '../data/resources';
 import { getPublishedArticles, getPublishedGuides, getPublishedNews, contentUrl, contentLabel, readingMinutes, formatDate } from '../lib/content';
@@ -188,7 +187,7 @@ const structuredData = {
     </div>
   </section>
 
-  <Newsletter />
+
   <script src="/scripts/filters.js" defer></script>
 </BaseLayout>
 
