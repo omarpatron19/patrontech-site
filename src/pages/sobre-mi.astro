@@ -4,7 +4,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import authorImage from '../assets/brand/irving-omar-patron-padron.jpg';
 import { absoluteUrl } from '../lib/seo';
 
-const authorSocialImage = await getImage({ src: authorImage, width: 600, format: 'webp' });
+const authorSocialImage = await getImage({
+  src: authorImage,
+  width: 600,
+  format: 'webp'
+});
 
 const certifications = [
   'Azure Solutions Architect Expert',
@@ -47,7 +51,9 @@ const structuredData = {
   <section class="page-hero">
     <div class="container">
       <span class="eyebrow">Autor de PatronTech</span>
+
       <h1>Irving Omar Patron Padron</h1>
+
       <p>
         Arquitecto cloud, consultor tecnológico, líder técnico y formador especializado en
         Microsoft Azure y transformación cloud.
@@ -55,34 +61,58 @@ const structuredData = {
     </div>
   </section>
 
-  <section class="section">
+  <section class="section about-section">
     <div class="container author-block">
-      <div class="author-photo">
-        <Image src={authorImage} alt="Irving Omar Patron Padron" loading="eager" />
-      </div>
+      <aside class="author-photo-column">
+        <div class="author-photo">
+          <Image
+            src={authorImage}
+            alt="Irving Omar Patron Padron"
+            loading="eager"
+            widths={[320, 480, 640]}
+            sizes="(max-width: 760px) 280px, 330px"
+          />
+        </div>
+
+        <div class="author-photo-caption">
+          <span class="author-role">Cloud Architect · Consultant · MCT</span>
+
+          <p>
+            Arquitectura cloud, Azure, networking, seguridad, FinOps,
+            automatización y formación técnica.
+          </p>
+        </div>
+      </aside>
 
       <div class="author-copy">
-        <h2>Experiencia práctica, liderazgo técnico y aprendizaje continuo</h2>
+        <h2>
+          Experiencia práctica, liderazgo técnico y aprendizaje continuo
+        </h2>
 
         <p>
           Soy <strong>Irving Omar Patron Padron</strong>, arquitecto y consultor cloud con amplia
           experiencia en la industria tecnológica, especializado en
-          <strong>Microsoft Azure, arquitectura de nube, migraciones, networking, seguridad,
-          FinOps y automatización</strong>.
+          <strong>
+            Microsoft Azure, arquitectura de nube, migraciones, networking,
+            seguridad, FinOps y automatización
+          </strong>.
         </p>
 
         <p>
           A lo largo de mi trayectoria he participado en proyectos empresariales de transformación
           y modernización cloud, trabajando en escenarios de
-          <strong>Azure VMware Solution, landing zones, conectividad híbrida, diseño de redes,
-          gobierno, seguridad, optimización de costos e Infrastructure as Code</strong>.
+          <strong>
+            Azure VMware Solution, landing zones, conectividad híbrida, diseño de redes,
+            gobierno, seguridad, optimización de costos e Infrastructure as Code
+          </strong>.
           También he participado liderando iniciativas y equipos dentro de
           <strong>Centros de Excelencia Cloud (Cloud CoE)</strong>, impulsando estándares,
           buenas prácticas, adopción de tecnologías y desarrollo de capacidades técnicas.
         </p>
 
         <p>
-          Además de mi trabajo como consultor, soy <strong>Microsoft Certified Trainer (MCT)</strong>
+          Además de mi trabajo como consultor, soy
+          <strong>Microsoft Certified Trainer (MCT)</strong>
           y participo activamente en formación y comunidad tecnológica, impartiendo cursos,
           talleres y sesiones técnicas orientadas a ayudar a estudiantes y profesionales a
           entender cloud desde una perspectiva práctica y aplicable a proyectos reales.
@@ -105,25 +135,36 @@ const structuredData = {
           como para resolver problemas reales.
         </p>
 
-        <div class="certifications-block" aria-labelledby="certifications-title">
-          <h3 id="certifications-title">Certificaciones destacadas</h3>
+        <div
+          class="certifications-block"
+          aria-labelledby="certifications-title"
+        >
+          <h3 id="certifications-title">
+            Certificaciones destacadas
+          </h3>
 
           <div class="certification-grid">
             {certifications.map((certification) => (
               <div class="certification-card">
-                <span class="certification-icon" aria-hidden="true">✓</span>
+                <span
+                  class="certification-icon"
+                  aria-hidden="true"
+                >
+                  ✓
+                </span>
+
                 <span>{certification}</span>
               </div>
             ))}
           </div>
 
           <p class="certifications-note">
-            También certificado en Azure Administration, Azure Fundamentals, Data, AI, Security,
-            AWS y Oracle Cloud Infrastructure.
+            También certificado en Azure Administration, Azure Fundamentals,
+            Data, AI, Security, AWS y Oracle Cloud Infrastructure.
           </p>
         </div>
 
-        <div class="hero-actions">
+        <div class="hero-actions about-actions">
           <a
             class="primary-btn"
             href="https://www.linkedin.com/in/omarpatron/"
@@ -132,7 +173,13 @@ const structuredData = {
           >
             Ver LinkedIn
           </a>
-          <a class="secondary-btn" href="mailto:irvingomar19@hotmail.com">Contactar</a>
+
+          <a
+            class="secondary-btn"
+            href="mailto:irvingomar19@hotmail.com"
+          >
+            Contactar
+          </a>
         </div>
       </div>
     </div>
@@ -140,13 +187,111 @@ const structuredData = {
 </BaseLayout>
 
 <style>
+  /*
+   * Layout principal
+   *
+   * Esta regla es importante:
+   * align-items: start evita que la fotografía se centre
+   * verticalmente contra toda la columna de texto.
+   */
+  .author-block {
+    display: grid;
+    grid-template-columns: minmax(260px, 330px) minmax(0, 1fr);
+    align-items: start;
+    gap: clamp(2.5rem, 5vw, 5rem);
+  }
+
+  /*
+   * Columna de fotografía
+   */
+  .author-photo-column {
+    align-self: start;
+    min-width: 0;
+  }
+
+  .author-photo {
+    position: sticky;
+    top: 7.5rem;
+    width: 100%;
+    margin: 0;
+  }
+
+  .author-photo :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: center top;
+    border: 1px solid var(--border, rgba(148, 163, 184, 0.18));
+    border-radius: 1.35rem;
+    box-shadow:
+      0 20px 50px rgba(2, 6, 23, 0.16),
+      0 4px 16px rgba(2, 6, 23, 0.08);
+  }
+
+  .author-photo-caption {
+    margin-top: 1.1rem;
+  }
+
+  .author-role {
+    display: block;
+    color: var(--primary-2, rgb(125, 211, 252));
+    font-size: 0.78rem;
+    font-weight: 800;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .author-photo-caption p {
+    margin: 0.55rem 0 0;
+    color: var(--muted, rgba(203, 213, 225, 0.8));
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+
+  /*
+   * Contenido principal
+   */
+  .author-copy {
+    min-width: 0;
+  }
+
+  .author-copy h2 {
+    max-width: 900px;
+    margin-top: 0;
+    margin-bottom: 1.75rem;
+    font-size: clamp(2.4rem, 5vw, 4.2rem);
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+  }
+
+  .author-copy > p {
+    max-width: 920px;
+    margin-top: 0;
+    margin-bottom: 1.35rem;
+    color: var(--muted, rgba(203, 213, 225, 0.82));
+    font-size: clamp(1rem, 1.4vw, 1.12rem);
+    line-height: 1.7;
+  }
+
+  .author-copy > p strong {
+    color: var(--text);
+  }
+
+  /*
+   * Certificaciones
+   */
   .certifications-block {
-    margin-top: 2rem;
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border, rgba(148, 163, 184, 0.18));
   }
 
   .certifications-block h3 {
-    margin-bottom: 1rem;
-    font-size: clamp(1.1rem, 2vw, 1.3rem);
+    margin: 0 0 1rem;
+    font-size: clamp(1.2rem, 2vw, 1.45rem);
   }
 
   .certification-grid {
@@ -157,36 +302,95 @@ const structuredData = {
 
   .certification-card {
     display: flex;
-    align-items: center;
-    gap: 0.65rem;
-    min-height: 3.5rem;
-    padding: 0.9rem 1rem;
+    align-items: start;
+    gap: 0.7rem;
+    min-height: 4rem;
+    padding: 1rem;
     border: 1px solid var(--border, rgba(148, 163, 184, 0.18));
     border-radius: 0.9rem;
     background: rgba(15, 23, 42, 0.42);
     font-size: 0.95rem;
-    line-height: 1.35;
+    line-height: 1.4;
   }
 
   .certification-icon {
     display: inline-grid;
     flex: 0 0 auto;
-    width: 1.6rem;
-    height: 1.6rem;
+    width: 1.65rem;
+    height: 1.65rem;
     place-items: center;
     border: 1px solid rgba(56, 189, 248, 0.4);
     border-radius: 999px;
     color: rgb(125, 211, 252);
-    font-weight: 700;
+    font-size: 0.8rem;
+    font-weight: 800;
   }
 
   .certifications-note {
-    margin-top: 0.85rem;
+    margin-top: 0.9rem;
+    margin-bottom: 0;
+    color: var(--muted, rgba(203, 213, 225, 0.8));
     font-size: 0.9rem;
-    opacity: 0.8;
+    line-height: 1.55;
   }
 
+  /*
+   * Acciones
+   */
+  .about-actions {
+    margin-top: 2rem;
+  }
+
+  /*
+   * Tablet
+   */
+  @media (max-width: 960px) {
+    .author-block {
+      grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+      gap: 2.5rem;
+    }
+
+    .author-photo {
+      top: 6.5rem;
+    }
+
+    .author-copy h2 {
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+    }
+
+    .certification-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /*
+   * Mobile
+   */
   @media (max-width: 720px) {
+    .author-block {
+      grid-template-columns: 1fr;
+      gap: 2.2rem;
+    }
+
+    .author-photo-column {
+      width: min(100%, 320px);
+      margin-inline: auto;
+    }
+
+    .author-photo {
+      position: static;
+      width: 100%;
+    }
+
+    .author-photo-caption {
+      text-align: center;
+    }
+
+    .author-copy h2 {
+      font-size: clamp(2rem, 10vw, 3rem);
+      text-align: left;
+    }
+
     .certification-grid {
       grid-template-columns: 1fr;
     }
