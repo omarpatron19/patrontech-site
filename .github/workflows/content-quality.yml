@@ -17,6 +17,7 @@ jobs:
   validate-and-build:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -35,6 +36,9 @@ jobs:
           else
             npm install --no-audit --no-fund
           fi
+
+      - name: Audit dependencies
+        run: npm audit --audit-level=high
 
       - name: Validate, test and build
         run: npm run build
